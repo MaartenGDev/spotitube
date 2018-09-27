@@ -15,7 +15,7 @@ public class PlaylistCollectionDTO {
         return playlists;
     }
 
-    public void setPlaylists(List<PlayListDTO> playlists) {
-        this.playlists = playlists;
+    public int getLength() {
+        return length;
     }
 }

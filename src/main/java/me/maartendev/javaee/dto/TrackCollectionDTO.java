@@ -2,14 +2,14 @@ package me.maartendev.javaee.dto;
 
 import java.util.List;
 
-public class TracksDTO {
+public class TrackCollectionDTO {
+    private List<TrackDTO> tracks;
+
     public List<TrackDTO> getTracks() {
         return tracks;
     }
 
-    private List<TrackDTO> tracks;
-
-    public TracksDTO(List<TrackDTO> tracks) {
+    public TrackCollectionDTO(List<TrackDTO> tracks) {
         this.tracks = tracks;
     }
 }

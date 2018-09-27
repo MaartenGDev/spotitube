@@ -3,7 +3,6 @@ package me.maartendev.javaee.services;
 import me.maartendev.javaee.dto.PlayListDTO;
 import me.maartendev.javaee.dto.TrackDTO;
 
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,5 +44,10 @@ public class PlayListRepository {
         }
 
         return null;
+    }
+
+    public boolean delete(int id){
+        return playLists.remove(this.find(id));
+
     }
 }
