@@ -1,5 +1,6 @@
 package me.maartendev.javaee;
 
+import me.maartendev.javaee.dto.LoginRequestDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

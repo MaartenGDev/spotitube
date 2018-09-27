@@ -1,5 +1,8 @@
 package me.maartendev.javaee;
 
+import me.maartendev.javaee.dto.LoginRequestDTO;
+import me.maartendev.javaee.dto.LoginResponseDTO;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,9 +21,8 @@ public class LoginController {
         loginResponseDTO.setToken("123-123-123-123");
 
         if (!hasValidPassword(requestDTO)) {
-            return Response.status(403).build();
+            return Response.status(401).build();
         }
-
 
         return Response.ok(loginResponseDTO).build();
     }

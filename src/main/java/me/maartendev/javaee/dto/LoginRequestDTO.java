@@ -1,4 +1,4 @@
-package me.maartendev.javaee;
+package me.maartendev.javaee.dto;
 
 public class LoginRequestDTO {
     private String user;

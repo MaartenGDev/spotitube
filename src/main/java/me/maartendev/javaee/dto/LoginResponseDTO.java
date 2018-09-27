@@ -1,4 +1,4 @@
-package me.maartendev.javaee;
+package me.maartendev.javaee.dto;
 
 public class LoginResponseDTO {
     private String token;
