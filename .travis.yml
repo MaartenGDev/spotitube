@@ -1,0 +1,9 @@
+addons:
+  sonarcloud:
+    organization: "maartengdev-github" # the key of the org you chose at step #3
+    token:
+      secure: "B1hhZPhKeEI9JYjwcmpk78LiEnm2e+Y9yE3O6lAoKeTEWbPtVjm4L1mLHj71HPHrsTk/PO1rTn8jsmb2M+zYXfRNc1gTmJ+9+jWogZC/vqOPSE295SzSuOMxAdzWVCDA9tuecKbrB2OkEovy/W2E2/waaUP2R/wAKLSUvxm/iKOBWeItEVLWCp2SGLBZnuVaUBSBDXCoNjll8LhHzRqAdxAkIBFFB9xBygCfhJnQNUBJRxtzryL3beVigENwcabXKBx53Bc35RS6pYeId3ZYnFhjy5XpMv7NmoHYUGMwwR0eH5aHYg3jWDzXHNCJ3xNDFqfPA1SZZ4Unx69JEqbRI2t+C9vY6yg1bYfeEtuHS25H2obPGwnLTaHaZyiE2HSYdnckU89EyItRJjGiU/sabKORlACo+G6DMrw5pFCaKfIIEEf2hu7BWcf0T8KfteShqmw8/ge/9LrPhgeo+BRe9pr8qfaMR/OHuZrfkiGEPX8Wo5njqM5BiusfrfuUj+6G1bLie6BZS+xax+0iX0mvam+UqhEC2EowkUihLGbPKovX0E2q27tXCwVXpKUkIpFuSubzDbAx9xhAbLiVbWCJzAP7kbxwIXAdIi57Jq6i9ng4zONxLVNMEPNjJSdyZka06M8sXK6y092EQgh9LRGwXMZFJEfgm5HPb6uLkRDISrw="
+script:
+# other script steps might be done before running the actual analysis
+- sonar-scanner
+- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar

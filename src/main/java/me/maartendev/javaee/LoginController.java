@@ -15,7 +15,6 @@ import javax.ws.rs.core.Response;
 @Path("/login")
 public class LoginController {
 
-    @Inject
     private AuthService authService;
 
     @POST
@@ -31,5 +30,10 @@ public class LoginController {
         }
 
         return Response.ok(loginResponseDTO).build();
+    }
+
+    @Inject
+    public void setAuthService(AuthService authService) {
+        this.authService = authService;
     }
 }
