@@ -17,10 +17,10 @@ public class PlayListService {
 
 
         List<TrackDTO> hardStyleTracks = new ArrayList<>();
-        hardStyleTracks.add(new TrackDTO(1, "Hardstyle never dies", "Peacock", 337,"Sea sew", 0, null, null, false));
+        hardStyleTracks.add(new TrackDTO(1, "Hardstyle never dies", "Peacock", 337,"Frenchcore", 0, null, null, false));
 
         List<TrackDTO> popTracks = new ArrayList<>();
-        popTracks.add(new TrackDTO(1, "Dabediedabedoe", "Micheal Jackson", 337,"Sea sew", 0, null, null, false));
+        popTracks.add(new TrackDTO(1, "Dabediedabedoe", "Micheal Jackson", 337,"New Hope", 0, null, null, false));
 
 
         playLists.add(new PlayListDTO(1, "EDM", true, edmTracks));
