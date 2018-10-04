@@ -1,24 +1,22 @@
 package me.maartendev.javaee;
 
 import me.maartendev.javaee.dto.PlaylistCollectionDTO;
-import me.maartendev.javaee.services.PlayListRepository;
+import me.maartendev.javaee.services.PlayListService;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/playlists")
 public class PlaylistController {
-    PlayListRepository playListRepository;
-
-    public PlaylistController(){
-        playListRepository = new PlayListRepository();
-    }
+    @Inject
+    PlayListService playListService;
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response index(){
-        return Response.ok(new PlaylistCollectionDTO(playListRepository.all())).build();
+        return Response.ok(new PlaylistCollectionDTO(playListService.all())).build();
     }
 
     @DELETE
@@ -26,8 +24,8 @@ public class PlaylistController {
     @PathParam("id")
     @Produces({MediaType.APPLICATION_JSON})
     public Response destroy(int id){
-        this.playListRepository.delete(id);
+        this.playListService.delete(id);
 
-        return Response.ok(new PlaylistCollectionDTO(this.playListRepository.all())).build();
+        return Response.ok(new PlaylistCollectionDTO(this.playListService.all())).build();
     }
 }

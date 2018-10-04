@@ -6,10 +6,10 @@ import me.maartendev.javaee.dto.TrackDTO;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayListRepository {
+public class PlayListService {
     List<PlayListDTO> playLists;
 
-    public PlayListRepository(){
+    public PlayListService(){
         List<PlayListDTO> playLists = new ArrayList<>();
 
         List<TrackDTO> EDMTracks = new ArrayList<>();
