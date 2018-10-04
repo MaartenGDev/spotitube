@@ -7,29 +7,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayListService {
-    List<PlayListDTO> playLists;
+    private List<PlayListDTO> playLists = new ArrayList<>();
 
     public PlayListService(){
-        List<PlayListDTO> playLists = new ArrayList<>();
-
-        List<TrackDTO> EDMTracks = new ArrayList<>();
-        EDMTracks.add(new TrackDTO(1, "Ocean and a rock", "Lisa Hannigan", 337,"Sea sew", 0, null, null, false));
-        EDMTracks.add(new TrackDTO(4, "So Long, Marianne", "Leonard Cohen", 546,"Songs of Leonard Cohen", 0, null, null, false));
-        EDMTracks.add(new TrackDTO(5, "One", "Leonard Cohen", 423,"Songs of Leonard Cohen", 37, "1-11-2001", null, false));
+        List<TrackDTO> edmTracks = new ArrayList<>();
+        edmTracks.add(new TrackDTO(1, "Ocean and a rock", "Lisa Hannigan", 337,"Sea sew", 0, null, null, false));
+        edmTracks.add(new TrackDTO(4, "So Long, Marianne", "Leonard Cohen", 546,"Songs of Leonard Cohen", 0, null, null, false));
+        edmTracks.add(new TrackDTO(5, "One", "Leonard Cohen", 423,"Songs of Leonard Cohen", 37, "1-11-2001", null, false));
 
 
-        List<TrackDTO> hardstyleTracks = new ArrayList<>();
-        hardstyleTracks.add(new TrackDTO(1, "Hardstyle never dies", "Peacock", 337,"Sea sew", 0, null, null, false));
+        List<TrackDTO> hardStyleTracks = new ArrayList<>();
+        hardStyleTracks.add(new TrackDTO(1, "Hardstyle never dies", "Peacock", 337,"Sea sew", 0, null, null, false));
 
         List<TrackDTO> popTracks = new ArrayList<>();
         popTracks.add(new TrackDTO(1, "Dabediedabedoe", "Micheal Jackson", 337,"Sea sew", 0, null, null, false));
 
 
-        playLists.add(new PlayListDTO(1, "EDM", true, EDMTracks));
-        playLists.add(new PlayListDTO(2, "HardStyle", false, hardstyleTracks));
+        playLists.add(new PlayListDTO(1, "EDM", true, edmTracks));
+        playLists.add(new PlayListDTO(2, "HardStyle", false, hardStyleTracks));
         playLists.add(new PlayListDTO(3, "POP", true, popTracks));
-
-        this.playLists = playLists;
     }
 
     public List<PlayListDTO> all() {
