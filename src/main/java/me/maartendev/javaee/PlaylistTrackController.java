@@ -14,13 +14,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/playlists/{id}")
 public class PlaylistTrackController {
-
     private PlayListService playListService;
-
-    @Inject
-    public PlaylistTrackController(PlayListService playListService){
-        this.playListService = playListService;
-    }
 
     @GET
     @Path("/tracks")
@@ -34,5 +28,10 @@ public class PlaylistTrackController {
 
 
         return Response.ok(new TrackCollectionDTO(playList.getTracks())).build();
+    }
+
+    @Inject
+    public void setPlayListService(PlayListService playListService) {
+        this.playListService = playListService;
     }
 }
