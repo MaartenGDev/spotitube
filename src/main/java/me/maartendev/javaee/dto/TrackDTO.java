@@ -4,6 +4,43 @@ public class TrackDTO {
     private int id;
     private String title;
     private String performer;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPerformer(String performer) {
+        this.performer = performer;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
+    }
+
+    public void setPlaycount(int playcount) {
+        this.playcount = playcount;
+    }
+
+    public void setPublicationDate(String publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setOfflineAvailable(boolean offlineAvailable) {
+        this.offlineAvailable = offlineAvailable;
+    }
+
     private int duration;
     private String album;
     private int playcount;
@@ -49,6 +86,9 @@ public class TrackDTO {
         return offlineAvailable;
     }
 
+    public TrackDTO(){
+
+    }
 
     public TrackDTO(int id, String title, String performer, int duration, String album, int playcount, String publicationDate, String description, boolean offlineAvailable) {
         this.id = id;

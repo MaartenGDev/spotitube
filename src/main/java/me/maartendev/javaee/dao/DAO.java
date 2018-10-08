@@ -6,6 +6,8 @@ import org.mariadb.jdbc.Driver;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,7 @@ public abstract class DAO {
 
     public ResultSet runQuery(String query) {
         try {
-            statement = connection.prepareStatement("SELECT * FROM playlists");
+            statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
 
             return resultSet;
@@ -38,13 +40,19 @@ public abstract class DAO {
     }
 
     public <T> List<T> all(Class<T> instanceClass) {
-        this.resultSet = runQuery("SELECT * FROM " + this.getTableName());
+        String table = this.getTableName(instanceClass);
+        String query = "SELECT * FROM " + table;
 
+        return this.fetchCollection(instanceClass, query);
+    }
+
+    private <T> List<T> fetchCollection(Class<T> instanceClass, String query) {
         List<T> models = new ArrayList<>();
+        this.resultSet = runQuery(query);
 
         try {
             while (this.resultSet.next()) {
-                models.add(this.getInstance(instanceClass, this.resultSet));
+                models.add(this.createInstanceWithDataSourceData(instanceClass, this.resultSet));
             }
 
             return models;
@@ -54,28 +62,31 @@ public abstract class DAO {
     }
 
     public <T> T find(Class<T> instanceClass, int id) {
-        this.resultSet = runQuery("SELECT * FROM " + this.getTableName() + " WHERE id=2");
+        this.resultSet = runQuery("SELECT * FROM " + this.getTableName(instanceClass) + " WHERE id=" + id);
 
         try {
             this.resultSet.next();
-
-            return this.getInstance(instanceClass, this.resultSet);
+            return this.createInstanceWithDataSourceData(instanceClass, this.resultSet);
         } catch (SQLException e) {
             return null;
         }
     }
 
-    private String getTableName(){
-        return this.getClass().getName().substring(this.getClass().getName().lastIndexOf(".") + 1).replace("DAO", "").toLowerCase() + "s";
+    private String getTableName(Class<?> clazz) {
+        return this.getAsNoun(clazz).toLowerCase() + "s";
     }
 
-    private <T> T getInstance(Class<T> instanceClass, ResultSet resultSet) throws SQLException {
+    private String getAsNoun(Class<?> clazz) {
+        return clazz.getName()
+                .substring(this.getClass().getName().lastIndexOf(".") + 1)
+                .replace("DTO", "");
+    }
+
+    private <T> T createInstanceWithDataSourceData(Class<T> instanceClass, ResultSet resultSet) throws SQLException {
         List<Method> setters = ClassInspector.getSetters(instanceClass);
-        T instance = null;
 
         try {
-            instance = instanceClass.newInstance();
-
+            T instance = instanceClass.newInstance();
 
             for (Method setter : setters) {
                 String setterMethod = setter.getName();
@@ -84,13 +95,7 @@ public abstract class DAO {
 
 
                 Object propertyValue = null;
-                Class<?> propertyType;
-
-                try {
-                    propertyType = instance.getClass().getMethod(setterMethod.replace("set", "get")).getReturnType();
-                } catch (NoSuchMethodException e) {
-                    propertyType = instance.getClass().getMethod(setterMethod.replace("set", "is")).getReturnType();
-                }
+                Class<?> propertyType = setter.getParameterTypes()[0];
 
                 if (propertyType == int.class) {
                     propertyValue = resultSet.getInt(propertyName);
@@ -98,6 +103,18 @@ public abstract class DAO {
                     propertyValue = resultSet.getString(propertyName);
                 } else if (propertyType == boolean.class) {
                     propertyValue = resultSet.getBoolean(propertyName);
+                } else if (propertyType == List.class) {
+                    String relatedEntityType = ((ParameterizedType) setter.getGenericParameterTypes()[0]).getActualTypeArguments()[0].getTypeName();
+                    Class<?> relationClass = Class.forName(relatedEntityType);
+
+                    String joinTable = this.getAsNoun(instanceClass) + "_" + this.getAsNoun(relationClass);
+
+                    String query = "SELECT * FROM " + joinTable + " LEFT JOIN " + this.getTableName(relationClass) + " ON " +
+                            this.getAsNoun(instanceClass) + "_id=";
+
+                    // SELECT * FROM playlist_track LEFT JOIN tracks ON playlist_track.track_id=tracks.id WHERE playlist_track.playlist_id=id
+
+                    propertyValue = this.fetchCollection(relationClass, query);
                 }
 
                 if (propertyValue != null) {
@@ -106,7 +123,7 @@ public abstract class DAO {
             }
 
             return instance;
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 

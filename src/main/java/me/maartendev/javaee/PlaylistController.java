@@ -13,6 +13,10 @@ import javax.ws.rs.core.Response;
 public class PlaylistController {
     PlayListService playListService;
 
+
+    @Inject
+    PlayListDAO playListDAO;
+
     public PlaylistController(){
         new PlayListDAO().all();
     }
@@ -25,7 +29,7 @@ public class PlaylistController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response index(){
-        return Response.ok(new PlaylistCollectionDTO(playListService.all())).build();
+        return Response.ok(playListDAO.all()).build();
     }
 
     @DELETE
@@ -35,6 +39,6 @@ public class PlaylistController {
     public Response destroy(int id){
         this.playListService.delete(id);
 
-        return Response.ok(new PlaylistCollectionDTO(this.playListService.all())).build();
+        return Response.ok(this.playListService.all()).build();
     }
 }
