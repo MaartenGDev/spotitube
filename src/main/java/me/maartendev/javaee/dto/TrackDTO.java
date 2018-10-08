@@ -1,9 +1,19 @@
 package me.maartendev.javaee.dto;
 
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class TrackDTO {
     private int id;
     private String title;
     private String performer;
+    private int duration;
+    private String album;
+    private int playcount;
+    private Date publicationDate;
+    private String description;
+    private boolean offlineAvailable;
 
     public void setId(int id) {
         this.id = id;
@@ -29,7 +39,7 @@ public class TrackDTO {
         this.playcount = playcount;
     }
 
-    public void setPublicationDate(String publicationDate) {
+    public void setPublicationDate(Date publicationDate) {
         this.publicationDate = publicationDate;
     }
 
@@ -40,13 +50,6 @@ public class TrackDTO {
     public void setOfflineAvailable(boolean offlineAvailable) {
         this.offlineAvailable = offlineAvailable;
     }
-
-    private int duration;
-    private String album;
-    private int playcount;
-    private String publicationDate;
-    private String description;
-    private boolean offlineAvailable;
 
     public int getId() {
         return id;
@@ -74,7 +77,7 @@ public class TrackDTO {
     }
 
     public String getPublicationDate() {
-        return publicationDate;
+        return new SimpleDateFormat("yyyy-MM-dd").format(publicationDate);
     }
 
     public String getDescription() {
@@ -90,7 +93,7 @@ public class TrackDTO {
 
     }
 
-    public TrackDTO(int id, String title, String performer, int duration, String album, int playcount, String publicationDate, String description, boolean offlineAvailable) {
+    public TrackDTO(int id, String title, String performer, int duration, String album, int playcount, Date publicationDate, String description, boolean offlineAvailable) {
         this.id = id;
         this.title = title;
         this.performer = performer;
