@@ -42,4 +42,31 @@ public class PlayListDAO extends DAO {
 
         return null;
     }
+
+    public PlayListDTO create(PlayListDTO playList) {
+        Map<Integer, Object> bindings = new HashMap<>();
+        bindings.put(1, playList.getName());
+        bindings.put(2, true);
+
+        this.runQuery("INSERT INTO playlists(name, owner) VALUES(?,?)", bindings);
+
+        return playList;
+    }
+
+    public PlayListDTO update(int id, PlayListDTO playList) {
+        Map<Integer, Object> bindings = new HashMap<>();
+        bindings.put(1, playList.getName());
+        bindings.put(2, id);
+
+        this.runQuery("UPDATE playlists SET name=? WHERE id=?", bindings);
+
+        return playList;
+    }
+
+    public void delete(int id) {
+        Map<Integer, Object> bindings = new HashMap<>();
+        bindings.put(1, id);
+
+        this.runQuery("DELETE FROM playlists WHERE id=?", bindings);
+    }
 }

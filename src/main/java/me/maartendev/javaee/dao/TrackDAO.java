@@ -79,4 +79,39 @@ public class TrackDAO extends DAO {
             return null;
         }
     }
+
+    public TrackCollectionDTO allNotInPlaylistId(int playListId) {
+        Map<Integer, Object> bindings = new HashMap<>();
+        bindings.put(1, playListId);
+
+        ResultSet resultSet = this.runQuery("SELECT * FROM tracks WHERE id NOT IN (SELECT track_id FROM playlist_track WHERE playlist_id=?)", bindings);
+
+        List<TrackDTO> tracks = new ArrayList<>();
+
+        try {
+            while (resultSet.next()) {
+                tracks.add(this.buildDTO(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new TrackCollectionDTO(tracks);
+    }
+
+    public void associateWithPlayList(int playListId, int trackId) {
+        Map<Integer, Object> bindings = new HashMap<>();
+        bindings.put(1, playListId);
+        bindings.put(2, trackId);
+
+        this.runQuery("INSERT INTO playlist_track(playlist_id, track_id) VALUES(?, ?)", bindings);
+    }
+
+    public void disassociateWithPlayList(int playListId, int trackId) {
+        Map<Integer, Object> bindings = new HashMap<>();
+        bindings.put(1, playListId);
+        bindings.put(2, trackId);
+
+        this.runQuery("DELETE FROM playlist_track WHERE playlist_id=? AND track_id=?", bindings);
+    }
 }

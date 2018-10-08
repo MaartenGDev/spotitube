@@ -35,6 +35,8 @@ public abstract class DAO {
                     statement.setString(binding.getKey(), (String) binding.getValue());
                 } else if (binding.getValue() instanceof Integer) {
                     statement.setInt(binding.getKey(), (Integer) binding.getValue());
+                } else if (binding.getValue() instanceof Boolean) {
+                    statement.setBoolean(binding.getKey(), (Boolean) binding.getValue());
                 }
             }
 

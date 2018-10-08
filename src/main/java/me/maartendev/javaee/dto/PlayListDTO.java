@@ -37,7 +37,6 @@ public class PlayListDTO {
         this.tracks = tracks;
     }
 
-    private int age;
     private String name;
     private boolean owner;
     private List<TrackDTO> tracks;
@@ -49,13 +48,5 @@ public class PlayListDTO {
         this.name = name;
         this.owner = owner;
         this.tracks = tracks;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 }
