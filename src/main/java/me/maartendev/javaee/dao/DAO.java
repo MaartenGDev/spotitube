@@ -90,14 +90,17 @@ public abstract class DAO<T> {
         if (conn != null) try {
             conn.close();
         } catch (SQLException ignored) {
+            LOGGER.log(Level.INFO, "Failed closing connection");
         }
         if (ps != null) try {
             ps.close();
         } catch (SQLException ignored) {
+            LOGGER.log(Level.INFO, "Failed closing Prepared Statement");
         }
         if (res != null) try {
             res.close();
         } catch (SQLException ignored) {
+            LOGGER.log(Level.INFO, "Failed closing ResultSet");
         }
     }
 }

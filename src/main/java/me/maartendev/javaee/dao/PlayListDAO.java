@@ -57,7 +57,7 @@ public class PlayListDAO extends DAO<PlayListDTO> {
             return new PlayListDTO(
                     resultSet.getInt("id"),
                     resultSet.getString("name"),
-                    resultSet.getBoolean("owner"),
+                    resultSet.getInt("owner_id") == 1,
                     new ArrayList<>()
             );
         } catch (SQLException e) {

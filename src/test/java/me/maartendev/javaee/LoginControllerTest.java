@@ -1,6 +1,6 @@
 package me.maartendev.javaee;
 
-import me.maartendev.javaee.dto.LoginRequestDTO;
+import me.maartendev.javaee.dto.UserDTO;
 import me.maartendev.javaee.services.AuthService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ public class LoginControllerTest {
         loginController.setAuthService(authService);
         Mockito.when(authService.isValid(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
 
-        LoginRequestDTO loginRequestDTO = new LoginRequestDTO();
+        UserDTO loginRequestDTO = new UserDTO();
         loginRequestDTO.setUser("maarten");
         loginRequestDTO.setPassword("password");
 

@@ -1,6 +1,6 @@
 package me.maartendev.javaee;
 
-import me.maartendev.javaee.dto.LoginRequestDTO;
+import me.maartendev.javaee.dto.UserDTO;
 import me.maartendev.javaee.dto.LoginResponseDTO;
 import me.maartendev.javaee.services.AuthService;
 
@@ -20,7 +20,7 @@ public class LoginController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response login(LoginRequestDTO requestDTO) {
+    public Response login(UserDTO requestDTO) {
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
         loginResponseDTO.setUser(requestDTO.getUser());
         loginResponseDTO.setToken("123-123-123-123");

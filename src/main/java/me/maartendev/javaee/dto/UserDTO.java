@@ -1,6 +1,6 @@
 package me.maartendev.javaee.dto;
 
-public class LoginRequestDTO {
+public class UserDTO {
     private String user;
     private String password;
 
@@ -19,4 +19,13 @@ public class LoginRequestDTO {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public UserDTO(){
+    }
+
+    public UserDTO(String user, String password){
+        this.user = user;
+        this.password = password;
+    }
+
 }

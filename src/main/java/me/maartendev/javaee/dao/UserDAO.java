@@ -1,0 +1,32 @@
+package me.maartendev.javaee.dao;
+
+import me.maartendev.javaee.dto.TrackCollectionDTO;
+import me.maartendev.javaee.dto.TrackDTO;
+import me.maartendev.javaee.dto.UserDTO;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class UserDAO extends DAO<UserDTO> {
+    public UserDTO findByUser(String user) {
+        Map<Integer, Object> bindings = new HashMap<>();
+        bindings.put(1, user);
+
+        return this.fetchResultForQuery("SELECT * FROM users WHERE user=?", bindings);
+    }
+
+
+    protected UserDTO buildDTO(ResultSet resultSet) {
+        try {
+            return new UserDTO(
+                    resultSet.getString("user"),
+                    resultSet.getString("password")
+            );
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+}
