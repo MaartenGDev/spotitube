@@ -5,10 +5,12 @@ import org.mariadb.jdbc.Driver;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public abstract class DAO {
+public abstract class DAO<T> {
     private Connection connection = null;
     private PreparedStatement statement = null;
     private ResultSet resultSet = null;
@@ -49,6 +51,30 @@ public abstract class DAO {
 
         return null;
     }
+    protected List<T> fetchResultsForQuery(String query){
+        return this.fetchResultsForQuery(query, new HashMap<>());
+    }
+
+    protected T fetchResultForQuery(String query, Map<Integer, Object> bindings) {
+        return this.fetchResultsForQuery(query, bindings).get(0);
+    }
+
+    protected List<T> fetchResultsForQuery(String query, Map<Integer, Object> bindings){
+        ResultSet resultSet = this.runQuery(query, bindings);
+        List<T> dtos = new ArrayList<>();
+
+        try {
+            while (resultSet.next()) {
+                dtos.add(this.buildDTO(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return dtos;
+    }
+
+    protected abstract T buildDTO(ResultSet resultSet);
 
 
     public void close(Connection conn, Statement ps, ResultSet res) {

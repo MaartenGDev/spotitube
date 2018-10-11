@@ -31,29 +31,4 @@ public class TrackController {
 
         return Response.ok(tracks).build();
     }
-
-
-//    @POST
-//    @Produces({MediaType.APPLICATION_JSON})
-//    public Response store(PlayListDTO playListDTO) {
-//        playListDAO.create(playListDTO);
-//
-//        return Response.ok(playListDAO.all()).build();
-//    }
-//
-//    @PUT
-//    @Path("/{id}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response update(@PathParam("id") int id, PlayListDTO playListDTO) {
-//        return Response.ok(playListDAO.update(id, playListDTO)).build();
-//    }
-//
-//    @DELETE
-//    @Path("/{id}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response destroy(@PathParam("id") int id) {
-//        playListDAO.delete(id);
-//
-//        return Response.ok(playListDAO.all()).build();
-//    }
 }

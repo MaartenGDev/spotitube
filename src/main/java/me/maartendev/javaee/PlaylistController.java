@@ -36,7 +36,8 @@ public class PlaylistController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("id") int id, PlayListDTO playListDTO) {
-        return Response.ok(playListDAO.update(id, playListDTO)).build();
+        playListDAO.update(id, playListDTO);
+        return Response.ok(playListDAO.all()).build();
     }
 
     @DELETE
@@ -44,7 +45,6 @@ public class PlaylistController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response destroy(@PathParam("id") int id) {
         playListDAO.delete(id);
-
         return Response.ok(playListDAO.all()).build();
     }
 

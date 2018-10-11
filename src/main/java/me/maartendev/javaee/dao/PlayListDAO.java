@@ -10,20 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayListDAO extends DAO {
+public class PlayListDAO extends DAO<PlayListDTO> {
     public PlaylistCollectionDTO all() {
-        ResultSet resultSet = this.runQuery("SELECT * FROM playlists");
-
-        List<PlayListDTO> playLists = new ArrayList<>();
-
-        try {
-            while (resultSet.next()) {
-                playLists.add(new PlayListDTO(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBoolean("owner"), new ArrayList<>()));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        List<PlayListDTO> playLists = this.fetchResultsForQuery("SELECT * FROM playlists");
         return new PlaylistCollectionDTO(playLists);
     }
 
@@ -31,16 +20,7 @@ public class PlayListDAO extends DAO {
         Map<Integer, Object> bindings = new HashMap<>();
         bindings.put(1, id);
 
-        ResultSet resultSet = this.runQuery("SELECT * FROM playlists WHERE id=?", bindings);
-
-        try {
-            resultSet.next();
-            return new PlayListDTO(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBoolean("owner"), new ArrayList<>());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return this.fetchResultForQuery("SELECT * FROM playlists WHERE id=?", bindings);
     }
 
     public PlayListDTO create(PlayListDTO playList) {
@@ -68,5 +48,20 @@ public class PlayListDAO extends DAO {
         bindings.put(1, id);
 
         this.runQuery("DELETE FROM playlists WHERE id=?", bindings);
+    }
+
+    @Override
+
+    protected PlayListDTO buildDTO(ResultSet resultSet) {
+        try {
+            return new PlayListDTO(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getBoolean("owner"),
+                    new ArrayList<>()
+            );
+        } catch (SQLException e) {
+            return null;
+        }
     }
 }
