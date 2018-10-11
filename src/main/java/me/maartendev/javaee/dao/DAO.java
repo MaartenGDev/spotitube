@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class DAO<T> {
-    private static final Logger LOGGER = Logger.getLogger( DAO.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(DAO.class.getName());
     private Connection connection = null;
     private PreparedStatement statement = null;
     private ResultSet resultSet = null;
@@ -27,7 +27,7 @@ public abstract class DAO<T> {
         }
     }
 
-    public ResultSet runQuery(String query){
+    public ResultSet runQuery(String query) {
         return this.runQuery(query, new HashMap<>());
     }
 
@@ -50,17 +50,14 @@ public abstract class DAO<T> {
             return resultSet;
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "SQL Error:" + e.getMessage());
-        }finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        } finally {
+            close(connection, statement, resultSet);
         }
 
         return null;
     }
-    protected List<T> fetchResultsForQuery(String query){
+
+    protected List<T> fetchResultsForQuery(String query) {
         return this.fetchResultsForQuery(query, new HashMap<>());
     }
 
@@ -68,7 +65,7 @@ public abstract class DAO<T> {
         return this.fetchResultsForQuery(query, bindings).get(0);
     }
 
-    protected List<T> fetchResultsForQuery(String query, Map<Integer, Object> bindings){
+    protected List<T> fetchResultsForQuery(String query, Map<Integer, Object> bindings) {
         ResultSet resultSet = this.runQuery(query, bindings);
         List<T> dtos = new ArrayList<>();
 

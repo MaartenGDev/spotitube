@@ -51,7 +51,6 @@ public class PlayListDAO extends DAO<PlayListDTO> {
     }
 
     @Override
-
     protected PlayListDTO buildDTO(ResultSet resultSet) {
         try {
             return new PlayListDTO(

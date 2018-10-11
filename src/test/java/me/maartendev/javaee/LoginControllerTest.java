@@ -13,6 +13,7 @@ public class LoginControllerTest {
 
         AuthService authService = Mockito.mock(AuthService.class);
         loginController.setAuthService(authService);
+
         Mockito.when(authService.isValid(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
 
         UserDTO loginRequestDTO = new UserDTO();
@@ -20,12 +21,5 @@ public class LoginControllerTest {
         loginRequestDTO.setPassword("password");
 
         Assertions.assertEquals(200, loginController.login(loginRequestDTO).getStatus());
-    }
-
-    @Test
-    public void testShouldReturnFalseIfItDoesNotContainsTheHardcodedCredentials() {
-        AuthService service = new AuthService();
-
-        Assertions.assertFalse(service.isValid("maarten", "secure123"));
     }
 }
