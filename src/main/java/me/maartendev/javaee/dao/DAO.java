@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class DAO<T> {
+    private static final Logger LOGGER = Logger.getLogger( DAO.class.getName() );
     private Connection connection = null;
     private PreparedStatement statement = null;
     private ResultSet resultSet = null;
@@ -21,6 +24,7 @@ public abstract class DAO<T> {
             connection = DriverManager.getConnection(DatabaseProperties.getDns());
         } catch (SQLException | InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -46,7 +50,7 @@ public abstract class DAO<T> {
 
             return resultSet;
         } catch (SQLException e) {
-            System.out.println("SQL Server:" + e.getMessage());
+            LOGGER.log(Level.SEVERE, "SQL Error:" + e.getMessage());
         }
 
         return null;
