@@ -29,4 +29,15 @@ public class AuthServiceTest {
 
         Assertions.assertFalse(service.isValid("maarten", "secure123"));
     }
+
+    @Test
+    public void testShouldReturnFalseIfItDoesTheUserCouldNotBeFound()
+    {
+        AuthService service = new AuthService();
+        UserDAO userDAO = Mockito.mock(UserDAO.class);
+        Mockito.when(userDAO.findByUser(Mockito.anyString())).thenReturn(null);
+        service.setUserDAO(userDAO);
+
+        Assertions.assertFalse(service.isValid("maarten", "secure123"));
+    }
 }
