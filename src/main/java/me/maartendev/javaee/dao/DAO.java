@@ -21,7 +21,6 @@ public abstract class DAO<T> {
     public DAO() {
         try {
             DriverManager.registerDriver((Driver) Class.forName(DatabaseProperties.getDriver()).getDeclaredConstructor().newInstance());
-            connection = DriverManager.getConnection(DatabaseProperties.getDns());
         } catch (SQLException | InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
             LOGGER.log(Level.SEVERE, e.getMessage());
@@ -34,6 +33,7 @@ public abstract class DAO<T> {
 
     public ResultSet runQuery(String query, Map<Integer, Object> bindings) {
         try {
+            connection = DriverManager.getConnection(DatabaseProperties.getDns());
             statement = connection.prepareStatement(query);
 
             for (Map.Entry<Integer, Object> binding : bindings.entrySet()) {
@@ -47,10 +47,15 @@ public abstract class DAO<T> {
             }
 
             resultSet = statement.executeQuery();
-
             return resultSet;
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "SQL Error:" + e.getMessage());
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return null;
