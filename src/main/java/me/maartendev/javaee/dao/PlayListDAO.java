@@ -1,7 +1,7 @@
 package me.maartendev.javaee.dao;
 
 import me.maartendev.javaee.dto.PlayListDTO;
-import me.maartendev.javaee.dto.PlaylistCollectionDTO;
+import me.maartendev.javaee.dto.PlayListCollectionDTO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayListDAO extends DAO<PlayListDTO> {
-    public PlaylistCollectionDTO all() {
+    public PlayListCollectionDTO all() {
         List<PlayListDTO> playLists = this.fetchResultsForQuery("SELECT * FROM playlists");
-        return new PlaylistCollectionDTO(playLists);
+        return new PlayListCollectionDTO(playLists);
     }
 
     public PlayListDTO find(int id) {
@@ -43,11 +43,11 @@ public class PlayListDAO extends DAO<PlayListDTO> {
         return playList;
     }
 
-    public void delete(int id) {
+    public ResultSet delete(int id) {
         Map<Integer, Object> bindings = new HashMap<>();
         bindings.put(1, id);
 
-        this.runQuery("DELETE FROM playlists WHERE id=?", bindings);
+       return this.runQuery("DELETE FROM playlists WHERE id=?", bindings);
     }
 
     @Override

@@ -2,11 +2,11 @@ package me.maartendev.javaee.dto;
 
 import java.util.List;
 
-public class PlaylistCollectionDTO {
+public class PlayListCollectionDTO {
     private List<PlayListDTO> playlists;
     private int length;
 
-    public PlaylistCollectionDTO(List<PlayListDTO> playlists) {
+    public PlayListCollectionDTO(List<PlayListDTO> playlists) {
         this.playlists = playlists;
         this.length = playlists.size();
     }

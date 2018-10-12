@@ -14,9 +14,6 @@ import java.util.logging.Logger;
 
 public abstract class DAO<T> {
     private static final Logger LOGGER = Logger.getLogger(DAO.class.getName());
-    private Connection connection = null;
-    private PreparedStatement statement = null;
-    private ResultSet resultSet = null;
 
     public DAO() {
         try {
@@ -32,6 +29,10 @@ public abstract class DAO<T> {
     }
 
     public ResultSet runQuery(String query, Map<Integer, Object> bindings) {
+        ResultSet resultSet = null;
+        PreparedStatement statement = null;
+        Connection connection = null;
+
         try {
             connection = DriverManager.getConnection(DatabaseProperties.getDns());
             statement = connection.prepareStatement(query);

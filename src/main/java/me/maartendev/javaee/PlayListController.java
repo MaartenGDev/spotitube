@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/playlists")
-public class PlaylistController {
+public class PlayListController {
 
     private PlayListDAO playListDAO;
 
