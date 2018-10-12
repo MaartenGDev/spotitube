@@ -13,7 +13,9 @@ services:
     - db
   db:
     container_name: db
-    image: mariadb:10.3.10-bionic
+    build:
+      context: .
+      dockerfile: db.Dockerfile
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -21,5 +23,3 @@ services:
       MYSQL_USER: spotitube
       MYSQL_PASSWORD: spotitube
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    volumes:
-      - ./db/db.sql:/docker-entrypoint-initdb.d/db.sql:ro
