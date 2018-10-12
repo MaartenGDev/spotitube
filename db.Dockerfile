@@ -1,5 +1,5 @@
 FROM mariadb:10.3.10-bionic
 
-ADD db/db.sql /docker-entrypoint-initdb.d/db.sql
+ADD db/structure.sql /docker-entrypoint-initdb.d/structure.sql
 
 EXPOSE 3306
