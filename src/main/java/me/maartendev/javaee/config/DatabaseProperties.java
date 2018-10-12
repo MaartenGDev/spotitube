@@ -29,14 +29,16 @@ public class DatabaseProperties {
     }
 
     public static String getDns() {
-       return DatabaseProperties.getPropertyValue("DNS");
+        return DatabaseProperties.getPropertyValue("DNS");
     }
 
-    private static String getPropertyValue(String key){
-        try{
-            return System.getenv(key);
-        }catch (NullPointerException e){
-            return getInstance().properties.getProperty(key);
+    private static String getPropertyValue(String key) {
+        String environmentValue = System.getenv(key);
+
+        if (environmentValue != null) {
+            return environmentValue;
         }
+
+        return getInstance().properties.getProperty(key);
     }
 }

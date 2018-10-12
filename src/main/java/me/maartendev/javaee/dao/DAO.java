@@ -3,7 +3,6 @@ package me.maartendev.javaee.dao;
 import me.maartendev.javaee.config.DatabaseProperties;
 import org.mariadb.jdbc.Driver;
 
-import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.ArrayList;
