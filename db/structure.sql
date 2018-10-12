@@ -63,7 +63,6 @@ create table if not exists playlist_track
 ;
 
 
-INSERT INTO spotitube.users(user, password) VALUES ('maarten', 'password')
-
-INSERT INTO spotitube.tracks (title, performer, duration, album, playcount, publicationDate, description, offlineAvailable) VALUES ('summerjam', 'spotify', 120, 'mio', 6, '2014-01-17', 'Lekker nummertje', 1);
-INSERT INTO spotitube.tracks (title, performer, duration, album, playcount, publicationDate, description, offlineAvailable) VALUES ('Turn Down For What', 'DJ Snake', 50, 'youtube', 900, '2015-01-31', 'top nummer', 0);
+INSERT INTO users(user, password) VALUES ('maarten', 'password');
+INSERT INTO tracks (title, performer, duration, album, playcount, publicationDate, description, offlineAvailable) VALUES ('summerjam', 'spotify', 120, 'mio', 6, '2014-01-17', 'Lekker nummertje', 1);
+INSERT INTO tracks (title, performer, duration, album, playcount, publicationDate, description, offlineAvailable) VALUES ('Turn Down For What', 'DJ Snake', 50, 'youtube', 900, '2015-01-31', 'top nummer', 0);
