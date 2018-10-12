@@ -4,6 +4,9 @@ import java.util.List;
 
 public class PlayListDTO {
     private int id;
+    private String name;
+    private boolean owner;
+    private List<TrackDTO> tracks;
 
     public int getId() {
         return id;
@@ -36,10 +39,6 @@ public class PlayListDTO {
     public void setTracks(List<TrackDTO> tracks) {
         this.tracks = tracks;
     }
-
-    private String name;
-    private boolean owner;
-    private List<TrackDTO> tracks;
 
     public PlayListDTO(){}
 
