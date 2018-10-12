@@ -25,11 +25,11 @@ public class DatabaseProperties {
     }
 
     public static String getDriver() {
-        return DatabaseProperties.getPropertyValue("driver");
+        return DatabaseProperties.getPropertyValue("DRIVER");
     }
 
     public static String getDns() {
-       return DatabaseProperties.getPropertyValue("dns");
+       return DatabaseProperties.getPropertyValue("DNS");
     }
 
     private static String getPropertyValue(String key){
