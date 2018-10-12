@@ -5,11 +5,14 @@ services:
     build:
       context: .
       dockerfile: app.Dockerfile
+    environment:
+      DNS: "jdbc:mariadb://db/spotitube?user=root&password=root"
     ports:
     - "8090:8080"
     depends_on:
     - db
   db:
+    container_name: db
     image: mariadb:10.3.10-bionic
     restart: always
     environment:
