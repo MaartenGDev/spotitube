@@ -1,8 +1,8 @@
-package me.maartendev.javaee;
+package me.maartendev.spotitube;
 
-import me.maartendev.javaee.dao.PlayListDAO;
-import me.maartendev.javaee.dto.PlayListDTO;
-import me.maartendev.javaee.dto.PlayListCollectionDTO;
+import me.maartendev.spotitube.dao.PlayListDAO;
+import me.maartendev.spotitube.dto.PlayListDTO;
+import me.maartendev.spotitube.dto.PlayListCollectionDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

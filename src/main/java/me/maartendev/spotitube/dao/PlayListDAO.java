@@ -1,7 +1,7 @@
-package me.maartendev.javaee.dao;
+package me.maartendev.spotitube.dao;
 
-import me.maartendev.javaee.dto.PlayListDTO;
-import me.maartendev.javaee.dto.PlayListCollectionDTO;
+import me.maartendev.spotitube.dto.PlayListDTO;
+import me.maartendev.spotitube.dto.PlayListCollectionDTO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

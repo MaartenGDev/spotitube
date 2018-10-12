@@ -1,7 +1,7 @@
-package me.maartendev.javaee.services;
+package me.maartendev.spotitube.services;
 
-import me.maartendev.javaee.dao.UserDAO;
-import me.maartendev.javaee.dto.UserDTO;
+import me.maartendev.spotitube.dao.UserDAO;
+import me.maartendev.spotitube.dto.UserDTO;
 
 import javax.inject.Inject;
 

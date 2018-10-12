@@ -1,4 +1,4 @@
-package me.maartendev.javaee.dto;
+package me.maartendev.spotitube.dto;
 
 
 import java.text.SimpleDateFormat;

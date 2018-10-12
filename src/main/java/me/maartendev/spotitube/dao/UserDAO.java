@@ -1,6 +1,6 @@
-package me.maartendev.javaee.dao;
+package me.maartendev.spotitube.dao;
 
-import me.maartendev.javaee.dto.UserDTO;
+import me.maartendev.spotitube.dto.UserDTO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

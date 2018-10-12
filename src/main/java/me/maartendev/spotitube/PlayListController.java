@@ -1,7 +1,7 @@
-package me.maartendev.javaee;
+package me.maartendev.spotitube;
 
-import me.maartendev.javaee.dao.PlayListDAO;
-import me.maartendev.javaee.dto.PlayListDTO;
+import me.maartendev.spotitube.dao.PlayListDAO;
+import me.maartendev.spotitube.dto.PlayListDTO;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

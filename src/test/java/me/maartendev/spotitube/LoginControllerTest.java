@@ -1,7 +1,7 @@
-package me.maartendev.javaee;
+package me.maartendev.spotitube;
 
-import me.maartendev.javaee.dto.UserDTO;
-import me.maartendev.javaee.services.AuthService;
+import me.maartendev.spotitube.dto.UserDTO;
+import me.maartendev.spotitube.services.AuthService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

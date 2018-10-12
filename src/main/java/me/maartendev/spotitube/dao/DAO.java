@@ -1,6 +1,6 @@
-package me.maartendev.javaee.dao;
+package me.maartendev.spotitube.dao;
 
-import me.maartendev.javaee.config.DatabaseProperties;
+import me.maartendev.spotitube.config.DatabaseProperties;
 import org.mariadb.jdbc.Driver;
 
 import java.lang.reflect.InvocationTargetException;

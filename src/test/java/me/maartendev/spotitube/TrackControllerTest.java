@@ -1,8 +1,8 @@
-package me.maartendev.javaee;
+package me.maartendev.spotitube;
 
-import me.maartendev.javaee.dao.TrackDAO;
-import me.maartendev.javaee.dto.TrackCollectionDTO;
-import me.maartendev.javaee.dto.TrackDTO;
+import me.maartendev.spotitube.dao.TrackDAO;
+import me.maartendev.spotitube.dto.TrackCollectionDTO;
+import me.maartendev.spotitube.dto.TrackDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
