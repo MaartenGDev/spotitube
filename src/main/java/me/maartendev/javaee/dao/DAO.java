@@ -3,6 +3,7 @@ package me.maartendev.javaee.dao;
 import me.maartendev.javaee.config.DatabaseProperties;
 import org.mariadb.jdbc.Driver;
 
+import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.logging.Logger;
 
 public abstract class DAO<T> {
     private static final Logger LOGGER = Logger.getLogger(DAO.class.getName());
+
 
     public DAO() {
         try {

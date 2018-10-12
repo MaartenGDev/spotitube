@@ -1,3 +1,4 @@
 target/
 src/main/java/resources/*
 !src/main/java/resources/.gitkeep
+!src/main/java/resources/database_example.properties

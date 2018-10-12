@@ -25,10 +25,18 @@ public class DatabaseProperties {
     }
 
     public static String getDriver() {
-        return getInstance().properties.getProperty("driver");
+        return DatabaseProperties.getPropertyValue("driver");
     }
 
     public static String getDns() {
-        return getInstance().properties.getProperty("dns");
+       return DatabaseProperties.getPropertyValue("dns");
+    }
+
+    private static String getPropertyValue(String key){
+        try{
+            return System.getenv(key);
+        }catch (NullPointerException e){
+            return getInstance().properties.getProperty(key);
+        }
     }
 }
