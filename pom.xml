@@ -54,7 +54,7 @@
 
     </dependencies>
     <build>
-        <finalName>javaee</finalName>
+        <finalName>spotitube</finalName>
         <plugins>
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
