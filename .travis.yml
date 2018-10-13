@@ -23,7 +23,7 @@ after_success:
 - docker build -t $DB_REPO . -f db.Dockerfile
 - docker tag $DB_REPO:latest $AWS_ACCOUNT_NUMBER.dkr.ecr.eu-west-1.amazonaws.com/$DB_REPO:latest
 - docker push $AWS_ACCOUNT_NUMBER.dkr.ecr.eu-west-1.amazonaws.com/$DB_REPO:latest
-- aws ecs update-service --service $PROJECT_NAME --task-definition $PROJECT_NAME --cluster $ECS_CLUSTER
+- aws ecs update-service --service $PROJECT_NAME --task-definition $PROJECT_NAME --cluster $ECS_CLUSTER --force-new-deployment --region eu-west-1
 
 env:
   global:
