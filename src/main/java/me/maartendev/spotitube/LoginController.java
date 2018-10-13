@@ -18,7 +18,7 @@ public class LoginController {
     private AuthService authService;
 
     @POST
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})
     public Response login(UserDTO requestDTO) {
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO();

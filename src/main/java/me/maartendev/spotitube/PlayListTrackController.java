@@ -20,7 +20,7 @@ public class PlayListTrackController {
 
     @GET
     @Path("/{id}/tracks")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public Response show(@PathParam("id") int id) {
         TrackCollectionDTO trackCollection = trackDAO.allForPlaylistId(id);
 
@@ -34,7 +34,7 @@ public class PlayListTrackController {
 
     @POST
     @Path("/{id}/tracks")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public Response store(@PathParam("id") int id, TrackDTO track) {
         trackDAO.associateWithPlayList(id, track.getId());
         return Response.ok(trackDAO.allForPlaylistId(id)).build();
@@ -42,7 +42,7 @@ public class PlayListTrackController {
 
     @DELETE
     @Path("/{playListId}/tracks/{trackId}")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public Response destroy(@PathParam("playListId") int playListId, @PathParam("trackId") int trackId) {
         trackDAO.disassociateWithPlayList(playListId, trackId);
 

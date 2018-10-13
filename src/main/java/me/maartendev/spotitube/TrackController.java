@@ -22,7 +22,7 @@ public class TrackController {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public Response index(@QueryParam("forPlaylist") int forPlaylist) {
 
         TrackCollectionDTO tracks = forPlaylist > 0

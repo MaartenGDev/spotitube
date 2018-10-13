@@ -19,13 +19,13 @@ public class PlayListController {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public Response index(){
         return Response.ok(playListDAO.all()).build();
     }
 
     @POST
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public Response store(PlayListDTO playListDTO) {
         playListDAO.create(playListDTO);
 
