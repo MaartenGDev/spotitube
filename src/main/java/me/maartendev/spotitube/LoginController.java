@@ -23,11 +23,13 @@ public class LoginController {
     public Response login(UserDTO requestDTO) {
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
         loginResponseDTO.setUser(requestDTO.getUser());
-        loginResponseDTO.setToken("123-123-123-123");
+
 
         if (!this.authService.isValid(requestDTO.getUser(), requestDTO.getPassword())) {
             return Response.status(401).build();
         }
+
+        loginResponseDTO.setToken(this.authService.getTokenForUsername(requestDTO.getUser()));
 
         return Response.ok(loginResponseDTO).build();
     }

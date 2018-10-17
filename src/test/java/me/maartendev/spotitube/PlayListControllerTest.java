@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayListControllerTest {
+    private static final String AUTH_TOKEN = "TEST-ABC";
+
     @Test
     public void testShouldReturnAllPlayListOnIndex() {
         PlayListController playlistController = new PlayListController();
@@ -22,9 +24,9 @@ public class PlayListControllerTest {
         playLists.add(new PlayListDTO());
 
         PlayListCollectionDTO playlistCollectionToReturn = new PlayListCollectionDTO(playLists);
-        Mockito.when(playListDAO.all()).thenReturn(playlistCollectionToReturn);
+        Mockito.when(playListDAO.allForUserId(Mockito.anyInt())).thenReturn(playlistCollectionToReturn);
 
-        PlayListCollectionDTO returnedCollection = (PlayListCollectionDTO) playlistController.index().getEntity();
+        PlayListCollectionDTO returnedCollection = (PlayListCollectionDTO) playlistController.index(AUTH_TOKEN).getEntity();
         Assertions.assertEquals(playlistCollectionToReturn.getPlaylists().size(), returnedCollection.getPlaylists().size());
     }
 
@@ -43,9 +45,9 @@ public class PlayListControllerTest {
         PlayListCollectionDTO expectedPlayListCollection = new PlayListCollectionDTO(playLists);
 
         Mockito.when(playListDAO.create(playListToCreate)).thenReturn(playListToCreate);
-        Mockito.when(playListDAO.all()).thenReturn(expectedPlayListCollection);
+        Mockito.when(playListDAO.allForUserId(Mockito.anyInt())).thenReturn(expectedPlayListCollection);
 
-        PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playlistController.store(playListToCreate).getEntity();
+        PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playlistController.store(playListToCreate, AUTH_TOKEN).getEntity();
         Assertions.assertEquals(expectedPlayListCollection.getPlaylists().size(), actualPlayListCollection.getPlaylists().size());
     }
 
@@ -65,9 +67,9 @@ public class PlayListControllerTest {
         PlayListCollectionDTO expectedPlayListCollection = new PlayListCollectionDTO(playLists);
 
         Mockito.when(playListDAO.update(Mockito.anyInt(), Mockito.anyObject())).thenReturn(playListWithLatestData);
-        Mockito.when(playListDAO.all()).thenReturn(expectedPlayListCollection);
+        Mockito.when(playListDAO.allForUserId(Mockito.anyInt())).thenReturn(expectedPlayListCollection);
 
-        PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playlistController.store(playListWithLatestData).getEntity();
+        PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playlistController.store(playListWithLatestData, AUTH_TOKEN).getEntity();
         Assertions.assertEquals(expectedPlayListCollection.getPlaylists().get(0).getName(), actualPlayListCollection.getPlaylists().get(0).getName());
     }
 
@@ -86,9 +88,9 @@ public class PlayListControllerTest {
         PlayListCollectionDTO expectedPlayListCollection = new PlayListCollectionDTO(playLists);
 
         Mockito.when(playListDAO.delete(Mockito.anyInt())).thenReturn(null);
-        Mockito.when(playListDAO.all()).thenReturn(expectedPlayListCollection);
+        Mockito.when(playListDAO.allForUserId(Mockito.anyInt())).thenReturn(expectedPlayListCollection);
 
-        PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playlistController.store(playListToCreate).getEntity();
+        PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playlistController.store(playListToCreate, AUTH_TOKEN).getEntity();
         Assertions.assertEquals(expectedPlayListCollection.getPlaylists().size(), actualPlayListCollection.getPlaylists().size());
     }
 }

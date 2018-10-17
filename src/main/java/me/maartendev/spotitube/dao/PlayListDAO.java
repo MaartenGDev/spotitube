@@ -11,8 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayListDAO extends DAO<PlayListDTO> {
-    public PlayListCollectionDTO all() {
-        List<PlayListDTO> playLists = this.fetchResultsForQuery("SELECT * FROM playlists");
+    public PlayListCollectionDTO allForUserId(int userId) {
+        Map<Integer, Object> bindings = new HashMap<>();
+        bindings.put(1, userId);
+
+        List<PlayListDTO> playLists = this.fetchResultsForQuery("SELECT *, owner_id=? as is_owner  FROM playlists", bindings);
         return new PlayListCollectionDTO(playLists);
     }
 
@@ -20,7 +23,7 @@ public class PlayListDAO extends DAO<PlayListDTO> {
         Map<Integer, Object> bindings = new HashMap<>();
         bindings.put(1, id);
 
-        return this.fetchResultForQuery("SELECT * FROM playlists WHERE id=?", bindings);
+        return this.fetchResultForQuery("SELECT *, owner_id=? as is_owner FROM playlists WHERE id=?", bindings);
     }
 
     public PlayListDTO create(PlayListDTO playList) {
@@ -56,7 +59,7 @@ public class PlayListDAO extends DAO<PlayListDTO> {
             return new PlayListDTO(
                     resultSet.getInt("id"),
                     resultSet.getString("name"),
-                    resultSet.getInt("owner_id") == 1,
+                    resultSet.getBoolean("is_owner"),
                     new ArrayList<>()
             );
         } catch (SQLException e) {

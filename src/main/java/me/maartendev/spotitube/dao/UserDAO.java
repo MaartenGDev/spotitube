@@ -8,6 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserDAO extends DAO<UserDTO> {
+    public UserDTO findByToken(String token) {
+        Map<Integer, Object> bindings = new HashMap<>();
+        bindings.put(1, token);
+
+        return this.fetchResultForQuery("SELECT * FROM users WHERE token=?", bindings);
+    }
+
     public UserDTO findByUser(String user) {
         Map<Integer, Object> bindings = new HashMap<>();
         bindings.put(1, user);
@@ -19,8 +26,10 @@ public class UserDAO extends DAO<UserDTO> {
     protected UserDTO buildDTO(ResultSet resultSet) {
         try {
             return new UserDTO(
+                    resultSet.getInt("id"),
                     resultSet.getString("user"),
-                    resultSet.getString("password")
+                    resultSet.getString("password"),
+                    resultSet.getString("token")
             );
         } catch (SQLException e) {
             return null;

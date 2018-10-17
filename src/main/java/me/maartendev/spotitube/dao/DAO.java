@@ -64,7 +64,9 @@ public abstract class DAO<T> {
     }
 
     protected T fetchResultForQuery(String query, Map<Integer, Object> bindings) {
-        return this.fetchResultsForQuery(query, bindings).get(0);
+        List<T> results = this.fetchResultsForQuery(query, bindings);
+
+        return results.size() > 0 ? results.get(0) : null;
     }
 
     protected List<T> fetchResultsForQuery(String query, Map<Integer, Object> bindings) {

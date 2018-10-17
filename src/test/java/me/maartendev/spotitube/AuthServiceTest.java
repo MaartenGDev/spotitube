@@ -13,7 +13,7 @@ public class AuthServiceTest {
     {
         AuthService service = new AuthService();
         UserDAO userDAO = Mockito.mock(UserDAO.class);
-        Mockito.when(userDAO.findByUser(Mockito.anyString())).thenReturn(new UserDTO("maarten", "secure"));
+        Mockito.when(userDAO.findByUser(Mockito.anyString())).thenReturn(new UserDTO(1, "maarten", "secure", "a"));
         service.setUserDAO(userDAO);
 
         Assertions.assertTrue(service.isValid("maarten", "secure"));
@@ -24,7 +24,7 @@ public class AuthServiceTest {
     {
         AuthService service = new AuthService();
         UserDAO userDAO = Mockito.mock(UserDAO.class);
-        Mockito.when(userDAO.findByUser(Mockito.anyString())).thenReturn(new UserDTO("maarten", "secure"));
+        Mockito.when(userDAO.findByUser(Mockito.anyString())).thenReturn(new UserDTO(1, "maarten", "secure", "a"));
         service.setUserDAO(userDAO);
 
         Assertions.assertFalse(service.isValid("maarten", "secure123"));

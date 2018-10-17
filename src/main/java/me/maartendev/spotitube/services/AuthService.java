@@ -14,6 +14,12 @@ public class AuthService {
         return userDTO != null && userDTO.getPassword().equals(password);
     }
 
+    public String getTokenForUsername(String username){
+        UserDTO userDTO = userDAO.findByUser(username);
+
+        return userDTO.getToken();
+    }
+
 
     @Inject
     public void setUserDAO(UserDAO userDAO) {
