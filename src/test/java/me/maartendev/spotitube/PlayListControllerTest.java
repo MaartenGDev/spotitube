@@ -58,7 +58,7 @@ public class PlayListControllerTest {
         playLists.add(playListToCreate);
         PlayListCollectionDTO expectedPlayListCollection = new PlayListCollectionDTO(playLists);
 
-        Mockito.when(playListDAO.create(Mockito.anyInt(),playListToCreate)).thenReturn(playListToCreate);
+        Mockito.when(playListDAO.create(Mockito.anyInt(),Mockito.anyObject())).thenReturn(playListToCreate);
         Mockito.when(playListDAO.allForUserId(Mockito.anyInt())).thenReturn(expectedPlayListCollection);
 
         PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playListController.store(playListToCreate, AUTH_TOKEN).getEntity();
