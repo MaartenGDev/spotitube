@@ -26,9 +26,9 @@ public class PlayListDAO extends DAO<PlayListDTO> {
         return this.fetchResultForQuery("SELECT *, owner_id=? as is_owner FROM playlists WHERE id=?", bindings);
     }
 
-    public PlayListDTO create(PlayListDTO playList) {
+    public PlayListDTO create(int ownerId, PlayListDTO playList) {
         Map<Integer, Object> bindings = new HashMap<>();
-        bindings.put(1, 1);
+        bindings.put(1, ownerId);
         bindings.put(2, playList.getName());
 
         this.runQuery("INSERT INTO playlists(owner_id,name) VALUES(?, ?)", bindings);

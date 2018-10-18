@@ -37,9 +37,11 @@ public class PlayListController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response store(PlayListDTO playListDTO, @QueryParam("token") String token) {
-        playListDAO.create(playListDTO);
+        UserDTO authenticatedUser = userDAO.findByToken(token);
 
-        return Response.ok(getAllPlayListsForAuthenticationToken(token)).build();
+        playListDAO.create(authenticatedUser.getId(), playListDTO);
+
+        return Response.ok(playListDAO.allForUserId(authenticatedUser.getId())).build();
     }
 
     @PUT

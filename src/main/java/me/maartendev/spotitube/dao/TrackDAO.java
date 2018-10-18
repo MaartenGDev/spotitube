@@ -28,16 +28,17 @@ public class TrackDAO extends DAO<TrackDTO> {
         Map<Integer, Object> bindings = new HashMap<>();
         bindings.put(1, playListId);
 
-        List<TrackDTO> tracks = this.fetchResultsForQuery("SELECT * FROM tracks WHERE id NOT IN (SELECT track_id FROM playlist_track WHERE playlist_id=?)", bindings);
+        List<TrackDTO> tracks = this.fetchResultsForQuery("SELECT *, 0 as offline_available FROM tracks WHERE id NOT IN (SELECT track_id FROM playlist_track WHERE playlist_id=?)", bindings);
         return new TrackCollectionDTO(tracks);
     }
 
-    public void associateWithPlayList(int playListId, int trackId) {
+    public void associateWithPlayList(int playListId, TrackDTO trackDTO) {
         Map<Integer, Object> bindings = new HashMap<>();
         bindings.put(1, playListId);
-        bindings.put(2, trackId);
+        bindings.put(2, trackDTO.getId());
+        bindings.put(3, trackDTO.isOfflineAvailable());
 
-        this.runQuery("INSERT INTO playlist_track(playlist_id, track_id) VALUES(?, ?)", bindings);
+        this.runQuery("INSERT INTO playlist_track(playlist_id, track_id, offline_available) VALUES(?, ?, ?)", bindings);
     }
 
     public void disassociateWithPlayList(int playListId, int trackId) {
@@ -58,9 +59,9 @@ public class TrackDAO extends DAO<TrackDTO> {
                     resultSet.getInt("duration"),
                     resultSet.getString("album"),
                     resultSet.getInt("playcount"),
-                    resultSet.getDate("publicationDate"),
+                    resultSet.getDate("publication_date"),
                     resultSet.getString("description"),
-                    resultSet.getBoolean("offlineAvailable")
+                    resultSet.getBoolean("offline_available")
             );
         } catch (SQLException e) {
             return null;

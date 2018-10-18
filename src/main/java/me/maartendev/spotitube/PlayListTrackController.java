@@ -36,7 +36,8 @@ public class PlayListTrackController {
     @Path("/{id}/tracks")
     @Produces(MediaType.APPLICATION_JSON)
     public Response store(@PathParam("id") int id, TrackDTO track) {
-        trackDAO.associateWithPlayList(id, track.getId());
+        trackDAO.associateWithPlayList(id, track);
+
         return Response.ok(trackDAO.allForPlaylistId(id)).build();
     }
 
