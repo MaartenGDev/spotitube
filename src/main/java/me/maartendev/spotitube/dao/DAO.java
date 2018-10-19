@@ -1,6 +1,7 @@
 package me.maartendev.spotitube.dao;
 
 import me.maartendev.spotitube.config.DatabaseProperties;
+import me.maartendev.spotitube.transformers.ResultSetTransformer;
 import org.mariadb.jdbc.Driver;
 
 import java.lang.reflect.InvocationTargetException;
@@ -12,7 +13,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class DAO<T> {
+public abstract class DAO {
     private static final Logger LOGGER = Logger.getLogger(DAO.class.getName());
 
 
@@ -58,36 +59,33 @@ public abstract class DAO<T> {
 
         return null;
     }
-
-    protected List<T> fetchResultsForQuery(String query) {
-        return this.fetchResultsForQuery(query, new HashMap<>());
-    }
-
-    protected T fetchResultForQuery(String query, Map<Integer, Object> bindings) {
-        List<T> results = this.fetchResultsForQuery(query, bindings);
-
+    protected <K> K fetchResultForQuery(String query, ResultSetTransformer<K> transformer, Map<Integer, Object> bindings) {
+        List<K> results = this.fetchResultsForQuery(query, transformer, bindings);
         return results.size() > 0 ? results.get(0) : null;
     }
 
-    protected List<T> fetchResultsForQuery(String query, Map<Integer, Object> bindings) {
+    protected <K> List<K> fetchResultsForQuery(String query, ResultSetTransformer<K> transformer) {
+        return this.fetchResultsForQuery(query, transformer, new HashMap<>());
+    }
+
+    protected  <K> List<K> fetchResultsForQuery(String query, ResultSetTransformer<K> transformer, Map<Integer, Object> bindings) {
         ResultSet resultSet = this.runQuery(query, bindings);
-        List<T> dtos = new ArrayList<>();
+        List<K> models = new ArrayList<>();
 
         try {
             while (resultSet.next()) {
-                dtos.add(this.buildDTO(resultSet));
+                models.add(transformer.transform(resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return dtos;
+        return models;
     }
 
-    protected abstract T buildDTO(ResultSet resultSet);
 
 
-    public void close(Connection conn, Statement ps, ResultSet res) {
+    private void close(Connection conn, Statement ps, ResultSet res) {
         if (conn != null) try {
             conn.close();
         } catch (SQLException ignored) {
