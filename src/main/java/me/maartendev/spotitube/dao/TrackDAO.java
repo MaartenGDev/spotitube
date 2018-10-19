@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class TrackDAO extends DAO<TrackDTO> {
+public class TrackDAO extends DAO {
     private ResultSetTransformer<TrackDTO> defaultResultSetTransformer;
 
     public TrackDAO() {

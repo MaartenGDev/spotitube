@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserDAO extends DAO<UserDTO> {
+public class UserDAO extends DAO {
     private ResultSetTransformer<UserDTO> defaultResultSetTransformer;
 
     public UserDAO() {

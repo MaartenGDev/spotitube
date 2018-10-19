@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayListDAO extends DAO<PlayListDTO> {
+public class PlayListDAO extends DAO {
     private ResultSetTransformer<PlayListDTO> defaultResultSetTransformer;
     private TrackDAO trackDAO;
 
