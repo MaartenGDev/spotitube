@@ -16,28 +16,16 @@ public class TrackDAO extends DAO {
     }
 
     private ResultSetTransformer<TrackDTO> getResultSetTransformer() {
-        return resultSet -> {
-            try {
-                return new TrackDTO(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("performer"), resultSet.getInt("duration"), resultSet.getString("album"), resultSet.getInt("playcount"), resultSet.getDate("publication_date"), resultSet.getString("description"), resultSet.getBoolean("offline_available"));
-            } catch (SQLException e) {
-                return null;
-            }
-        };
+        return resultSet -> new TrackDTO(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("performer"), resultSet.getInt("duration"), resultSet.getString("album"), resultSet.getInt("playcount"), resultSet.getDate("publication_date"), resultSet.getString("description"), resultSet.getBoolean("offline_available"));
     }
 
     private ResultSetTransformer<Map.Entry<Integer, TrackDTO>> getPlayListTracksTransformer() {
-        return resultSet -> {
-            try {
-                return new AbstractMap.SimpleEntry<>(resultSet.getInt("playlist_id"), this.defaultResultSetTransformer.transform(resultSet));
-            } catch (SQLException e) {
-                return null;
-            }
-        };
+        return resultSet -> new AbstractMap.SimpleEntry<>(resultSet.getInt("playlist_id"), this.defaultResultSetTransformer.transform(resultSet));
     }
 
 
     public TrackCollectionDTO all() {
-        List<TrackDTO> tracks = this.fetchResultsForQuery("SELECT * FROM tracks", defaultResultSetTransformer);
+        List<TrackDTO> tracks = this.fetchResultsForQuery("SELECT *, 0 as offline_available FROM tracks", defaultResultSetTransformer);
         return new TrackCollectionDTO(tracks);
     }
 
