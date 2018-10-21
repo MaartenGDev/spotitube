@@ -48,4 +48,16 @@ public class PlayListDTO {
         this.owner = owner;
         this.tracks = tracks;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if(!(object instanceof PlayListDTO)) return false;
+        PlayListDTO playListDTO =(PlayListDTO) object;
+
+        return this.getId() == playListDTO.getId()
+                && this.getName().equals(playListDTO.getName())
+                && this.isOwner() == (playListDTO.isOwner())
+                && this.getTracks().equals(playListDTO.getTracks());
+
+    }
 }

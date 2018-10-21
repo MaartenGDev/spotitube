@@ -17,7 +17,7 @@ import java.util.List;
 public abstract class DAO {
     private DataSource dataSource;
 
-    public <K> ResultSetTransformer<K> buildResultSetTransformer(ResultSetRowTransformer<K> resultSetRowTransformer) {
+    private <K> ResultSetTransformer<K> buildResultSetTransformer(ResultSetRowTransformer<K> resultSetRowTransformer) {
         return resultSet -> {
             List<K> results = new ArrayList<>();
 
@@ -38,13 +38,13 @@ public abstract class DAO {
         this.executeQuery(query, bindings, null);
     }
 
-    protected <K> K fetchResultForQuery(String query, ResultSetRowTransformer<K> transformer)  {
+    protected <K> K fetchResultForQuery(String query, ResultSetRowTransformer<K> transformer) {
         return this.fetchResultsForQuery(query, transformer, new ArrayList<>()).get(0);
     }
 
-    protected <K> K fetchResultForQuery(String query, ResultSetRowTransformer<K> transformer, List bindings){
+    protected <K> K fetchResultForQuery(String query, ResultSetRowTransformer<K> transformer, List bindings) {
         List<K> results = this.fetchResultsForQuery(query, transformer, bindings);
-        
+
         return results.size() > 0 ? results.get(0) : null;
     }
 
@@ -67,12 +67,16 @@ public abstract class DAO {
             try (PreparedStatement statement = con.prepareStatement(query)) {
                 addBindingsToStatement(bindings, statement, 1);
 
-                try (ResultSet rs = statement.executeQuery()) {
-                    if(resultSetTransformer != null){
-                        return resultSetTransformer.convertToList(rs);
-                    }
+                boolean queryHasSideEffects = resultSetTransformer == null;
 
+                if (queryHasSideEffects) {
+                    statement.execute();
+                    statement.getGeneratedKeys();
                     return new ArrayList<>();
+                }
+
+                try (ResultSet rs = statement.executeQuery()) {
+                    return resultSetTransformer.convertToList(rs);
                 }
             }
         }

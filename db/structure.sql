@@ -1,7 +1,3 @@
-USE spotitube;
-DROP DATABASE spotitube;
-CREATE DATABASE IF NOT EXISTS spotitube;
-USE spotitube;
 create table tracks
 (
   id               int auto_increment,
@@ -28,7 +24,7 @@ create table users
   constraint users_id_uindex
   unique (id),
   constraint users_token_uindex
-  unique (token)
+  unique (user,token)
 );
 
 alter table users
@@ -62,6 +58,3 @@ create table playlist_track
 
 
 INSERT INTO users(user, password, token) VALUES ('maarten', 'password', 'aaa-bbb');
-INSERT INTO users(user, password, token) VALUES ('hello', 'world', 'bbb-ccc');
-INSERT INTO tracks (title, performer, duration, album, playcount, publication_date, description) VALUES ('summerjam', 'spotify', 120, 'mio', 6, '2014-01-17', 'Lekker nummertje');
-INSERT INTO tracks (title, performer, duration, album, playcount, publication_date, description) VALUES ('Turn Down For What', 'DJ Snake', 50, 'youtube', 900, '2015-01-31', 'top nummer');

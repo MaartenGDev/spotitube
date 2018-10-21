@@ -68,7 +68,7 @@ public class PlayListDAO extends DAO {
         List<Object> bindings = new ArrayList<>();
         bindings.add(id);
 
-        return this.fetchResultForQuery("SELECT *, owner_id=? as is_owner FROM playlists WHERE id=?", defaultResultSetRowTransformer, bindings);
+        return this.fetchResultForQuery("SELECT *, 1 as is_owner FROM playlists WHERE id=?", defaultResultSetRowTransformer, bindings);
     }
 
     public PlayListDTO create(int ownerId, PlayListDTO playList) {
@@ -82,7 +82,8 @@ public class PlayListDAO extends DAO {
             return null;
         }
 
-        return playList;
+        List<PlayListDTO> allPlayLists = this.allForUserId(ownerId).getPlaylists();
+        return allPlayLists.get(allPlayLists.size() -1);
     }
 
     public PlayListDTO update(int id, PlayListDTO playList){

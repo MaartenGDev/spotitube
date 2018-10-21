@@ -38,14 +38,26 @@ public class UserDTO {
         this.token = token;
     }
 
-    public UserDTO(){
+    public UserDTO() {
     }
 
-    public UserDTO(int id, String user, String password, String token){
+    public UserDTO(int id, String user, String password, String token) {
         this.id = id;
         this.user = user;
         this.password = password;
         this.token = token;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if(!(object instanceof UserDTO)) return false;
+        UserDTO userDTO =(UserDTO) object;
+
+        return this.getId() == userDTO.getId()
+                && this.getUser().equals(userDTO.getUser())
+                && this.getPassword().equals(userDTO.getPassword())
+                && this.getToken().equals(userDTO.getToken());
+
     }
 
 }

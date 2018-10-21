@@ -38,4 +38,18 @@ public class UserDAO extends DAO {
 
         return this.fetchResultForQuery("SELECT * FROM users WHERE user=?", defaultResultSetRowTransformer, bindings);
     }
+
+    public UserDTO create(UserDTO userDTO){
+        List<Object> bindings = new ArrayList<>();
+        bindings.add(userDTO.getUser());
+        bindings.add(userDTO.getPassword());
+        bindings.add(userDTO.getToken());
+
+        try {
+            this.runQuery("INSERT INTO users(user, password, token) VALUES (?, ?, ?)", bindings);
+            return userDTO;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
 }

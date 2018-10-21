@@ -50,9 +50,9 @@ public class PlayListTrackController {
     @Path("/{playListId}/tracks/{trackId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response destroy(@PathParam("playListId") int playListId, @PathParam("trackId") int trackId) {
-        try {
-            trackDAO.disassociateWithPlayList(playListId, trackId);
-        } catch (SQLException e) {
+        boolean hasBeenDisassociated = trackDAO.disassociateWithPlayList(playListId, trackId);
+
+        if (!hasBeenDisassociated) {
             return Response.serverError().build();
         }
 

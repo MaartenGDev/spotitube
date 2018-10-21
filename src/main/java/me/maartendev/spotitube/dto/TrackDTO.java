@@ -89,9 +89,7 @@ public class TrackDTO {
         return offlineAvailable;
     }
 
-    public TrackDTO(){
-
-    }
+    public TrackDTO(){ }
 
     public TrackDTO(int id, String title, String performer, int duration, String album, int playcount, Date publicationDate, String description, boolean offlineAvailable) {
         this.id = id;
@@ -103,5 +101,22 @@ public class TrackDTO {
         this.publicationDate = publicationDate;
         this.description = description;
         this.offlineAvailable = offlineAvailable;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if(!(object instanceof TrackDTO)) return false;
+        TrackDTO trackDTO =(TrackDTO) object;
+
+        return this.getId() == trackDTO.getId()
+                && this.getTitle().equals(trackDTO.getTitle())
+                && this.getPerformer().equals(trackDTO.getPerformer())
+                && this.getDuration() == trackDTO.getDuration()
+                && this.getAlbum().equals(trackDTO.getAlbum())
+                && this.getPlaycount() == trackDTO.getPlaycount()
+                && this.getPublicationDate().equals(trackDTO.getPublicationDate())
+                && this.getDescription().equals(trackDTO.getDescription())
+                && this.isOfflineAvailable() == trackDTO.isOfflineAvailable();
+
     }
 }
