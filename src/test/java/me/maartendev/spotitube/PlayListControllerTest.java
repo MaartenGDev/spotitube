@@ -83,7 +83,7 @@ public class PlayListControllerTest {
         Mockito.when(playListDAO.update(Mockito.anyInt(), Mockito.anyObject())).thenReturn(playListWithLatestData);
         Mockito.when(playListDAO.allForUserId(Mockito.anyInt())).thenReturn(expectedPlayListCollection);
 
-        PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playListController.store(playListWithLatestData, AUTH_TOKEN).getEntity();
+        PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playListController.update(1, playListWithLatestData, AUTH_TOKEN).getEntity();
         Assertions.assertEquals(expectedPlayListCollection.getPlaylists().get(0).getName(), actualPlayListCollection.getPlaylists().get(0).getName());
     }
 
@@ -97,14 +97,13 @@ public class PlayListControllerTest {
         List<PlayListDTO> playLists = new ArrayList<>();
         playLists.add(new PlayListDTO());
 
-        PlayListDTO playListToCreate = new PlayListDTO();
-        playLists.add(playListToCreate);
+        int playlistIdToDelete = 1;
         PlayListCollectionDTO expectedPlayListCollection = new PlayListCollectionDTO(playLists);
 
-        Mockito.when(playListDAO.delete(Mockito.anyInt())).thenReturn(null);
+        Mockito.when(playListDAO.delete(playlistIdToDelete)).thenReturn(true);
         Mockito.when(playListDAO.allForUserId(Mockito.anyInt())).thenReturn(expectedPlayListCollection);
 
-        PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playListController.store(playListToCreate, AUTH_TOKEN).getEntity();
+        PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playListController.destroy(playlistIdToDelete, AUTH_TOKEN).getEntity();
         Assertions.assertEquals(expectedPlayListCollection.getPlaylists().size(), actualPlayListCollection.getPlaylists().size());
     }
 }
