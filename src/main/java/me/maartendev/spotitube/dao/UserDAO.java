@@ -1,20 +1,20 @@
 package me.maartendev.spotitube.dao;
 
 import me.maartendev.spotitube.dto.UserDTO;
-import me.maartendev.spotitube.transformers.ResultSetTransformer;
+import me.maartendev.spotitube.transformers.ResultSetRowTransformer;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO extends DAO {
-    private ResultSetTransformer<UserDTO> defaultResultSetTransformer;
+    private ResultSetRowTransformer<UserDTO> defaultResultSetRowTransformer;
 
     public UserDAO() {
-        defaultResultSetTransformer = this.getResultSetTransformer();
+        defaultResultSetRowTransformer = this.getResultSetTransformer();
     }
 
-    private ResultSetTransformer<UserDTO> getResultSetTransformer() {
+    private ResultSetRowTransformer<UserDTO> getResultSetTransformer() {
         return resultSet -> {
             try {
                 return new UserDTO(resultSet.getInt("id"), resultSet.getString("user"), resultSet.getString("password"), resultSet.getString("token"));
@@ -25,17 +25,17 @@ public class UserDAO extends DAO {
     }
 
 
-    public UserDTO findByToken(String token) {
-        Map<Integer, Object> bindings = new HashMap<>();
-        bindings.put(1, token);
+    public UserDTO findByToken(String token){
+        List<Object> bindings = new ArrayList<>();
+        bindings.add(token);
 
-        return this.fetchResultForQuery("SELECT * FROM users WHERE token=?", defaultResultSetTransformer, bindings);
+        return this.fetchResultForQuery("SELECT * FROM users WHERE token=?", defaultResultSetRowTransformer, bindings);
     }
 
     public UserDTO findByUser(String user) {
-        Map<Integer, Object> bindings = new HashMap<>();
-        bindings.put(1, user);
+        List<Object> bindings = new ArrayList<>();
+        bindings.add(user);
 
-        return this.fetchResultForQuery("SELECT * FROM users WHERE user=?", defaultResultSetTransformer, bindings);
+        return this.fetchResultForQuery("SELECT * FROM users WHERE user=?", defaultResultSetRowTransformer, bindings);
     }
 }

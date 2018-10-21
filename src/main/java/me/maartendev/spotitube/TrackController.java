@@ -13,7 +13,6 @@ import javax.ws.rs.core.Response;
 
 @Path("/tracks")
 public class TrackController {
-
     private TrackDAO trackDAO;
 
     @Inject

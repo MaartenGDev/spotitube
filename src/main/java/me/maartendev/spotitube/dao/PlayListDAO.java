@@ -3,7 +3,7 @@ package me.maartendev.spotitube.dao;
 import me.maartendev.spotitube.dto.PlayListDTO;
 import me.maartendev.spotitube.dto.PlayListCollectionDTO;
 import me.maartendev.spotitube.dto.TrackDTO;
-import me.maartendev.spotitube.transformers.ResultSetTransformer;
+import me.maartendev.spotitube.transformers.ResultSetRowTransformer;
 
 import javax.inject.Inject;
 import java.sql.ResultSet;
@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class PlayListDAO extends DAO {
-    private ResultSetTransformer<PlayListDTO> defaultResultSetTransformer;
+    private static final Logger LOGGER = Logger.getLogger(DAO.class.getName());
+    private ResultSetRowTransformer<PlayListDTO> defaultResultSetRowTransformer;
     private TrackDAO trackDAO;
 
     @Inject
@@ -24,13 +26,13 @@ public class PlayListDAO extends DAO {
 
 
     public PlayListDAO() {
-        this.defaultResultSetTransformer = this.getResultSetTransformer();
+        this.defaultResultSetRowTransformer = this.getResultSetTransformer();
     }
 
-    private ResultSetTransformer<PlayListDTO> getResultSetTransformer() {
+    private ResultSetRowTransformer<PlayListDTO> getResultSetTransformer() {
         return resultSet -> {
             try {
-                return new PlayListDTO(resultSet.getInt("id"), resultSet.getString("name"),resultSet.getBoolean("is_owner"), new ArrayList<>());
+                return new PlayListDTO(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBoolean("is_owner"), new ArrayList<>());
             } catch (SQLException e) {
                 return null;
             }
@@ -38,24 +40,23 @@ public class PlayListDAO extends DAO {
     }
 
     public PlayListCollectionDTO allForUserId(int userId) {
-        Map<Integer, Object> bindings = new HashMap<>();
-        bindings.put(1, userId);
+        List<Object> bindings = new ArrayList<>();
+        bindings.add(userId);
 
-        Map<Integer, PlayListDTO> playListsById = this.getAsMapWithIdAsKey(this.fetchResultsForQuery("SELECT *, owner_id=? as is_owner  FROM playlists", defaultResultSetTransformer, bindings));
-
+        Map<Integer, PlayListDTO> playListsById = this.getAsMapWithIdAsKey(this.fetchResultsForQuery("SELECT *, owner_id=? as is_owner  FROM playlists", defaultResultSetRowTransformer, bindings));
         List<Map.Entry<Integer, TrackDTO>> tracks = trackDAO.allUsedInPlayLists();
 
-        for(Map.Entry<Integer, TrackDTO> playListTrack : tracks){
+        for (Map.Entry<Integer, TrackDTO> playListTrack : tracks) {
             playListsById.get(playListTrack.getKey()).getTracks().add(playListTrack.getValue());
         }
 
         return new PlayListCollectionDTO(new ArrayList<>(playListsById.values()));
     }
 
-    private Map<Integer, PlayListDTO> getAsMapWithIdAsKey(List<PlayListDTO>  playLists){
+    private Map<Integer, PlayListDTO> getAsMapWithIdAsKey(List<PlayListDTO> playLists) {
         Map<Integer, PlayListDTO> playListsById = new HashMap<>();
 
-        for (PlayListDTO playList : playLists){
+        for (PlayListDTO playList : playLists) {
             playListsById.put(playList.getId(), playList);
         }
 
@@ -64,36 +65,51 @@ public class PlayListDAO extends DAO {
 
 
     public PlayListDTO find(int id) {
-        Map<Integer, Object> bindings = new HashMap<>();
-        bindings.put(1, id);
+        List<Object> bindings = new ArrayList<>();
+        bindings.add(id);
 
-        return this.fetchResultForQuery("SELECT *, owner_id=? as is_owner FROM playlists WHERE id=?", defaultResultSetTransformer, bindings);
+        return this.fetchResultForQuery("SELECT *, owner_id=? as is_owner FROM playlists WHERE id=?", defaultResultSetRowTransformer, bindings);
     }
 
     public PlayListDTO create(int ownerId, PlayListDTO playList) {
-        Map<Integer, Object> bindings = new HashMap<>();
-        bindings.put(1, ownerId);
-        bindings.put(2, playList.getName());
+        List<Object> bindings = new ArrayList<>();
+        bindings.add(ownerId);
+        bindings.add(playList.getName());
 
-        this.runQuery("INSERT INTO playlists(owner_id,name) VALUES(?, ?)", bindings);
-
-        return playList;
-    }
-
-    public PlayListDTO update(int id, PlayListDTO playList) {
-        Map<Integer, Object> bindings = new HashMap<>();
-        bindings.put(1, playList.getName());
-        bindings.put(2, id);
-
-        this.runQuery("UPDATE playlists SET name=? WHERE id=?", bindings);
+        try {
+            this.runQuery("INSERT INTO playlists(owner_id,name) VALUES(?, ?)", bindings);
+        } catch (SQLException e) {
+            return null;
+        }
 
         return playList;
     }
 
-    public ResultSet delete(int id) {
-        Map<Integer, Object> bindings = new HashMap<>();
-        bindings.put(1, id);
+    public PlayListDTO update(int id, PlayListDTO playList){
+        List<Object> bindings = new ArrayList<>();
+        bindings.add(playList.getName());
+        bindings.add(id);
 
-       return this.runQuery("DELETE FROM playlists WHERE id=?", bindings);
+        try {
+            this.runQuery("UPDATE playlists SET name=? WHERE id=?", bindings);
+        } catch (SQLException e) {
+            return null;
+        }
+
+        return playList;
+    }
+
+    public boolean delete(int id) {
+        List<Object> bindings = new ArrayList<>();
+        bindings.add(id);
+
+        try {
+            this.runQuery("DELETE FROM playlists WHERE id=?", bindings);
+            return true;
+        } catch (SQLException e) {
+            LOGGER.severe(e.getMessage());
+        }
+
+        return false;
     }
 }

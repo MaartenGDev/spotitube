@@ -8,7 +8,7 @@ public class DatabaseProperties {
     private Properties properties = new Properties();
 
 
-    public DatabaseProperties() {
+    private DatabaseProperties() {
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream("database.properties"));
         } catch (IOException e) {
@@ -16,7 +16,7 @@ public class DatabaseProperties {
         }
     }
 
-    public static DatabaseProperties getInstance() {
+    private static DatabaseProperties getInstance() {
         if (instance != null) {
             return instance;
         }
@@ -28,8 +28,8 @@ public class DatabaseProperties {
         return DatabaseProperties.getPropertyValue("DRIVER");
     }
 
-    public static String getDns() {
-        return DatabaseProperties.getPropertyValue("DNS");
+    public static String getDsn() {
+        return DatabaseProperties.getPropertyValue("DSN");
     }
 
     private static String getPropertyValue(String key) {

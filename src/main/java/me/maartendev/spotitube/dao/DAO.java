@@ -1,105 +1,116 @@
 package me.maartendev.spotitube.dao;
 
-import me.maartendev.spotitube.config.DatabaseProperties;
+import me.maartendev.spotitube.transformers.ResultSetRowTransformer;
 import me.maartendev.spotitube.transformers.ResultSetTransformer;
-import org.mariadb.jdbc.Driver;
+import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.sql.*;
+import javax.inject.Inject;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class DAO {
-    private static final Logger LOGGER = Logger.getLogger(DAO.class.getName());
+    private DataSource dataSource;
 
+    public <K> ResultSetTransformer<K> buildResultSetTransformer(ResultSetRowTransformer<K> resultSetRowTransformer) {
+        return resultSet -> {
+            List<K> results = new ArrayList<>();
 
-    public DAO() {
-        try {
-            DriverManager.registerDriver((Driver) Class.forName(DatabaseProperties.getDriver()).getDeclaredConstructor().newInstance());
-        } catch (SQLException | InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-            LOGGER.log(Level.SEVERE, e.getMessage());
-        }
-    }
-
-    public ResultSet runQuery(String query) {
-        return this.runQuery(query, new HashMap<>());
-    }
-
-    public ResultSet runQuery(String query, Map<Integer, Object> bindings) {
-        ResultSet resultSet = null;
-        PreparedStatement statement = null;
-        Connection connection = null;
-
-        try {
-            connection = DriverManager.getConnection(DatabaseProperties.getDns());
-            statement = connection.prepareStatement(query);
-
-            for (Map.Entry<Integer, Object> binding : bindings.entrySet()) {
-                if (binding.getValue() instanceof String) {
-                    statement.setString(binding.getKey(), (String) binding.getValue());
-                } else if (binding.getValue() instanceof Integer) {
-                    statement.setInt(binding.getKey(), (Integer) binding.getValue());
-                } else if (binding.getValue() instanceof Boolean) {
-                    statement.setBoolean(binding.getKey(), (Boolean) binding.getValue());
-                }
+            while (resultSet.next()) {
+                results.add(resultSetRowTransformer.transform(resultSet));
             }
 
-            resultSet = statement.executeQuery();
-            return resultSet;
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "SQL Error:" + e.getMessage());
-        } finally {
-            close(connection, statement, resultSet);
-        }
-
-        return null;
+            return results;
+        };
     }
-    protected <K> K fetchResultForQuery(String query, ResultSetTransformer<K> transformer, Map<Integer, Object> bindings) {
+
+    @Inject
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public void runQuery(String query, List bindings) throws SQLException {
+        this.executeQuery(query, bindings, null);
+    }
+
+    protected <K> K fetchResultForQuery(String query, ResultSetRowTransformer<K> transformer)  {
+        return this.fetchResultsForQuery(query, transformer, new ArrayList<>()).get(0);
+    }
+
+    protected <K> K fetchResultForQuery(String query, ResultSetRowTransformer<K> transformer, List bindings){
         List<K> results = this.fetchResultsForQuery(query, transformer, bindings);
+        
         return results.size() > 0 ? results.get(0) : null;
     }
 
-    protected <K> List<K> fetchResultsForQuery(String query, ResultSetTransformer<K> transformer) {
-        return this.fetchResultsForQuery(query, transformer, new HashMap<>());
+    protected <K> List<K> fetchResultsForQuery(String query, ResultSetRowTransformer<K> transformer) {
+        return this.fetchResultsForQuery(query, transformer, new ArrayList<>());
     }
 
-    protected  <K> List<K> fetchResultsForQuery(String query, ResultSetTransformer<K> transformer, Map<Integer, Object> bindings) {
-        ResultSet resultSet = this.runQuery(query, bindings);
-        List<K> models = new ArrayList<>();
-
+    public <K> List<K> fetchResultsForQuery(String query, ResultSetRowTransformer<K> transformer, List bindings) {
         try {
-            while (resultSet.next()) {
-                models.add(transformer.transform(resultSet));
-            }
+            return this.executeQuery(query, bindings, this.buildResultSetTransformer(transformer));
         } catch (SQLException e) {
-            e.printStackTrace();
+            return new ArrayList<>();
         }
-
-        return models;
     }
 
 
+    private <K> List<K> executeQuery(String query, List bindings, ResultSetTransformer<K> resultSetTransformer) throws SQLException {
+        query = addPlaceholdersForBindings(query, bindings);
+        try (Connection con = this.dataSource.getConnection()) {
+            try (PreparedStatement statement = con.prepareStatement(query)) {
+                addBindingsToStatement(bindings, statement, 1);
 
-    private void close(Connection conn, Statement ps, ResultSet res) {
-        if (conn != null) try {
-            conn.close();
-        } catch (SQLException ignored) {
-            LOGGER.log(Level.INFO, "Failed closing connection");
+                try (ResultSet rs = statement.executeQuery()) {
+                    if(resultSetTransformer != null){
+                        return resultSetTransformer.convertToList(rs);
+                    }
+
+                    return new ArrayList<>();
+                }
+            }
         }
-        if (ps != null) try {
-            ps.close();
-        } catch (SQLException ignored) {
-            LOGGER.log(Level.INFO, "Failed closing Prepared Statement");
+    }
+
+    private String addPlaceholdersForBindings(String query, List bindings) {
+        int bindingPosition = 1;
+
+        for (Object binding : bindings) {
+            int placeholderIndex = StringUtils.ordinalIndexOf(query, "?", bindingPosition);
+            if (binding instanceof List) {
+                List entries = (List) binding;
+
+                String placeholders = String.join(",", Collections.nCopies(entries.size(), "?"));
+
+                query = query.substring(0, placeholderIndex) + placeholders + query.substring(placeholderIndex + 1);
+            }
+
+            bindingPosition++;
         }
-        if (res != null) try {
-            res.close();
-        } catch (SQLException ignored) {
-            LOGGER.log(Level.INFO, "Failed closing ResultSet");
+
+        return query;
+    }
+
+    private void addBindingsToStatement(List bindings, PreparedStatement statement, int bindingPositionOffset) throws SQLException {
+        for (Object binding : bindings) {
+            if (binding instanceof String) {
+                statement.setString(bindingPositionOffset, (String) binding);
+            } else if (binding instanceof Integer) {
+                statement.setInt(bindingPositionOffset, (Integer) binding);
+            } else if (binding instanceof Boolean) {
+                statement.setBoolean(bindingPositionOffset, (Boolean) binding);
+            } else if (binding instanceof List) {
+                this.addBindingsToStatement((List) binding, statement, bindingPositionOffset);
+            }
+
+            bindingPositionOffset++;
+
         }
     }
 }

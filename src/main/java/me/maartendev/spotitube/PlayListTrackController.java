@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.SQLException;
 
 @Path("/playlists")
 public class PlayListTrackController {
@@ -24,7 +25,7 @@ public class PlayListTrackController {
     public Response show(@PathParam("id") int id) {
         TrackCollectionDTO trackCollection = trackDAO.allForPlaylistId(id);
 
-        if(trackCollection == null){
+        if (trackCollection == null) {
             return Response.status(404).build();
         }
 
@@ -36,7 +37,11 @@ public class PlayListTrackController {
     @Path("/{id}/tracks")
     @Produces(MediaType.APPLICATION_JSON)
     public Response store(@PathParam("id") int id, TrackDTO track) {
-        trackDAO.associateWithPlayList(id, track);
+        boolean hasBeenAssociated = trackDAO.associateWithPlayList(id, track);
+
+        if (!hasBeenAssociated) {
+            return Response.serverError().build();
+        }
 
         return Response.ok(trackDAO.allForPlaylistId(id)).build();
     }
@@ -45,7 +50,11 @@ public class PlayListTrackController {
     @Path("/{playListId}/tracks/{trackId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response destroy(@PathParam("playListId") int playListId, @PathParam("trackId") int trackId) {
-        trackDAO.disassociateWithPlayList(playListId, trackId);
+        try {
+            trackDAO.disassociateWithPlayList(playListId, trackId);
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
 
         return Response.ok(trackDAO.allForPlaylistId(playListId)).build();
     }

@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 @Path("/playlists")
@@ -30,7 +31,7 @@ public class PlayListController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response index(@QueryParam("token") String token){
+    public Response index(@QueryParam("token") String token) {
         return Response.ok(getAllPlayListsForAuthenticationToken(token)).build();
     }
 
@@ -38,8 +39,11 @@ public class PlayListController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response store(PlayListDTO playListDTO, @QueryParam("token") String token) {
         UserDTO authenticatedUser = userDAO.findByToken(token);
+        PlayListDTO createdPlaylist = playListDAO.create(authenticatedUser.getId(), playListDTO);
 
-        playListDAO.create(authenticatedUser.getId(), playListDTO);
+        if (createdPlaylist == null) {
+            return Response.serverError().build();
+        }
 
         return Response.ok(playListDAO.allForUserId(authenticatedUser.getId())).build();
     }
@@ -48,7 +52,12 @@ public class PlayListController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("id") int id, PlayListDTO playListDTO, @QueryParam("token") String token) {
-        playListDAO.update(id, playListDTO);
+        PlayListDTO updatedPlayList = playListDAO.update(id, playListDTO);
+
+        if (updatedPlayList == null) {
+            return Response.serverError().build();
+        }
+
         return Response.ok(getAllPlayListsForAuthenticationToken(token)).build();
     }
 
@@ -56,15 +65,19 @@ public class PlayListController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response destroy(@PathParam("id") int id, @QueryParam("token") String token) {
-        playListDAO.delete(id);
+        boolean hasBeenDeleted = playListDAO.delete(id);
+
+        if (!hasBeenDeleted) {
+            return Response.serverError().build();
+        }
 
         return Response.ok(getAllPlayListsForAuthenticationToken(token)).build();
     }
 
-    private PlayListCollectionDTO getAllPlayListsForAuthenticationToken(String token){
+    private PlayListCollectionDTO getAllPlayListsForAuthenticationToken(String token) {
         UserDTO authenticatedUser = userDAO.findByToken(token);
 
-        if(authenticatedUser == null){
+        if (authenticatedUser == null) {
             return new PlayListCollectionDTO(new ArrayList<>());
         }
 
