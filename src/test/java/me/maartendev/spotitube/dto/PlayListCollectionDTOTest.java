@@ -12,8 +12,8 @@ public class PlayListCollectionDTOTest {
     public void shouldReturnTheTotalForAllTracks() {
         List<PlayListDTO> playLists = new ArrayList<>();
         List<TrackDTO> tracks = new ArrayList<>();
-        tracks.add(createTestTrackDTO().setDuration(20));
-        tracks.add(createTestTrackDTO().setDuration(40));
+        tracks.add(createTestTrackDTOWithDuration(20));
+        tracks.add(createTestTrackDTOWithDuration(40));
 
         playLists.add(new PlayListDTO(1, "PlayList1", false, tracks));
         PlayListCollectionDTO playListCollectionDTO = new PlayListCollectionDTO(playLists);
@@ -21,16 +21,17 @@ public class PlayListCollectionDTOTest {
         Assertions.assertEquals(60, playListCollectionDTO.getLength());
     }
 
-    private TrackDTO createTestTrackDTO() {
-        return new TrackDTO()
-                .setId(1)
-                .setTitle("Hello")
-                .setPerformer("World")
-                .setDuration(20)
-                .setAlbum("Latest")
-                .setDuration(10)
-                .setPublicationDate(new Date())
-                .setDescription("Nice Song")
-                .setOfflineAvailable(false);
+    private TrackDTO createTestTrackDTOWithDuration(int duration) {
+        TrackDTO trackDTO = new TrackDTO();
+        trackDTO.setId(1);
+        trackDTO.setTitle("Hello");
+        trackDTO.setPerformer("World");
+        trackDTO.setDuration(duration);
+        trackDTO.setAlbum("Latest");
+        trackDTO.setPublicationDate(new Date());
+        trackDTO.setDescription("Nice Song");
+        trackDTO.setOfflineAvailable(false);
+
+        return trackDTO;
     }
 }

@@ -19,16 +19,19 @@ public class TrackDAO extends DAO {
     }
 
     private ResultSetRowTransformer<TrackDTO> getResultSetTransformer() {
-        return resultSet -> new TrackDTO()
-                .setId(resultSet.getInt("id"))
-                .setTitle(resultSet.getString("title"))
-                .setPerformer(resultSet.getString("performer"))
-                .setDuration(resultSet.getInt("duration"))
-                .setAlbum(resultSet.getString("album"))
-                .setPlaycount(resultSet.getInt("playcount"))
-                .setPublicationDate(resultSet.getDate("publication_date"))
-                .setDescription(resultSet.getString("description"))
-                .setOfflineAvailable(resultSet.getBoolean("offline_available"));
+        return resultSet -> {
+            TrackDTO trackDTO = new TrackDTO();
+            trackDTO.setId(resultSet.getInt("id"));
+            trackDTO.setTitle(resultSet.getString("title"));
+            trackDTO.setPerformer(resultSet.getString("performer"));
+            trackDTO.setDuration(resultSet.getInt("duration"));
+            trackDTO.setAlbum(resultSet.getString("album"));
+            trackDTO.setPlaycount(resultSet.getInt("playcount"));
+            trackDTO.setPublicationDate(resultSet.getDate("publication_date"));
+            trackDTO.setDescription(resultSet.getString("description"));
+            trackDTO.setOfflineAvailable(resultSet.getBoolean("offline_available"));
+            return trackDTO;
+        };
     }
 
     private ResultSetRowTransformer<Map.Entry<Integer, TrackDTO>> getPlayListTracksTransformer() {
@@ -52,7 +55,7 @@ public class TrackDAO extends DAO {
         }
 
         List<TrackDTO> tracks = this.all().getTracks();
-        return tracks.get(tracks.size() -1);
+        return tracks.get(tracks.size() - 1);
     }
 
     public TrackCollectionDTO all() {
@@ -60,7 +63,7 @@ public class TrackDAO extends DAO {
         return new TrackCollectionDTO(tracks);
     }
 
-    public TrackCollectionDTO allForPlaylistId(int playListId){
+    public TrackCollectionDTO allForPlaylistId(int playListId) {
         List<Object> bindings = new ArrayList<>();
         bindings.add(playListId);
 
@@ -97,7 +100,7 @@ public class TrackDAO extends DAO {
         return false;
     }
 
-    public boolean disassociateWithPlayList(int playListId, int trackId){
+    public boolean disassociateWithPlayList(int playListId, int trackId) {
         List<Object> bindings = new ArrayList<>();
         bindings.add(playListId);
         bindings.add(trackId);

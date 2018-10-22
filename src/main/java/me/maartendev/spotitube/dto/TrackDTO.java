@@ -15,49 +15,40 @@ public class TrackDTO {
     private String description;
     private boolean offlineAvailable;
 
-    public TrackDTO setId(int id) {
+    public void setId(int id) {
         this.id = id;
-        return this;
     }
 
-    public TrackDTO setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
-        return this;
     }
 
-    public TrackDTO setPerformer(String performer) {
+    public void setPerformer(String performer) {
         this.performer = performer;
-        return this;
     }
 
-    public TrackDTO setDuration(int duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
-        return this;
     }
 
-    public TrackDTO setAlbum(String album) {
+    public void setAlbum(String album) {
         this.album = album;
-        return this;
     }
 
-    public TrackDTO setPlaycount(int playcount) {
+    public void setPlaycount(int playcount) {
         this.playcount = playcount;
-        return this;
     }
 
-    public TrackDTO setPublicationDate(Date publicationDate) {
+    public void setPublicationDate(Date publicationDate) {
         this.publicationDate = publicationDate;
-        return this;
     }
 
-    public TrackDTO setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
-        return this;
     }
 
-    public TrackDTO setOfflineAvailable(boolean offlineAvailable) {
+    public void setOfflineAvailable(boolean offlineAvailable) {
         this.offlineAvailable = offlineAvailable;
-        return this;
     }
 
     public int getId() {

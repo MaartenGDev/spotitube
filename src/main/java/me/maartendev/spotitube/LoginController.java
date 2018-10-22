@@ -24,7 +24,6 @@ public class LoginController {
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
         loginResponseDTO.setUser(requestDTO.getUser());
 
-
         if (!this.authService.isValid(requestDTO.getUser(), requestDTO.getPassword())) {
             return Response.status(401).build();
         }

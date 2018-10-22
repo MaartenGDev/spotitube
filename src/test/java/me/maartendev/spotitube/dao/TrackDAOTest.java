@@ -121,15 +121,17 @@ public class TrackDAOTest extends DatabaseTest {
     }
 
     private TrackDTO createTestTrackDTO() {
-        return new TrackDTO()
-                .setId(1)
-                .setTitle("Hello")
-                .setPerformer("World")
-                .setDuration(20)
-                .setAlbum("Latest")
-                .setDuration(10)
-                .setPublicationDate(new Date())
-                .setDescription("Nice Song")
-                .setOfflineAvailable(false);
+        TrackDTO trackDTO = new TrackDTO();
+
+        trackDTO.setId(1);
+        trackDTO.setTitle("Hello");
+        trackDTO.setPerformer("World");
+        trackDTO.setDuration(20);
+        trackDTO.setAlbum("Latest");
+        trackDTO.setPublicationDate(new Date());
+        trackDTO.setDescription("Nice Song");
+        trackDTO.setOfflineAvailable(false);
+
+        return trackDTO;
     }
 }
