@@ -68,6 +68,19 @@ public class PlayListControllerTest {
         Assertions.assertEquals(expectedPlayListCollection.getPlaylists().size(), actualPlayListCollection.getPlaylists().size());
     }
 
+    @Test
+    public void testShouldReturnServerErrorIfThePlayListFailedToSave() {
+        PlayListController playListController = this.buildController();
+
+        PlayListDAO playListDAO = Mockito.mock(PlayListDAO.class);
+        playListController.setPlayListDAO(playListDAO);
+
+        PlayListDTO playListToCreate = new PlayListDTO();
+        Mockito.when(playListDAO.create(Mockito.anyInt(),Mockito.anyObject())).thenReturn(null);
+
+        Response response = playListController.store(playListToCreate, AUTH_TOKEN);
+        Assertions.assertEquals(500, response.getStatus());
+    }
 
     @Test
     public void testShouldReturnAllPlayListWithUpdatedPlayListAfterUpdate() {
@@ -133,8 +146,6 @@ public class PlayListControllerTest {
         Response response = playListController.update(-1, new PlayListDTO(), AUTH_TOKEN);
         Assertions.assertEquals(500, response.getStatus());
     }
-
-
 
     @Test
     public void testShouldReturnEmptyPlaylistCollectionIfNoUserWasFound() {
