@@ -50,6 +50,11 @@ public class PlayListDTO {
     }
 
     @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
     public boolean equals(Object object) {
         if(!(object instanceof PlayListDTO)) return false;
         PlayListDTO playListDTO =(PlayListDTO) object;

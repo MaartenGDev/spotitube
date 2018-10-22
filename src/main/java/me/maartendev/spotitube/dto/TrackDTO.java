@@ -104,6 +104,11 @@ public class TrackDTO {
     }
 
     @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+    
+    @Override
     public boolean equals(Object object) {
         if(!(object instanceof TrackDTO)) return false;
         TrackDTO trackDTO =(TrackDTO) object;

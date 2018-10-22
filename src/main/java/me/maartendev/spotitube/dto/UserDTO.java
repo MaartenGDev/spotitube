@@ -49,6 +49,11 @@ public class UserDTO {
     }
 
     @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
     public boolean equals(Object object) {
         if(!(object instanceof UserDTO)) return false;
         UserDTO userDTO =(UserDTO) object;

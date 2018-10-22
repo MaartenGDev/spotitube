@@ -60,6 +60,20 @@ public class TrackDAOTest extends DatabaseTest {
     }
 
     @Test
+    public void testAssociateReturnsFalseIfTheAssociationFailed() {
+        TrackDAO trackDAO = this.getTrackDAO();
+        PlayListDAO playListDAO = this.getPlayListDAO();
+
+        PlayListDTO createdPlayList = playListDAO.create(1, new PlayListDTO(-1, "Playlists 1",false, new ArrayList<>()));
+        TrackDTO createdTrack = trackDAO.create(new TrackDTO(1,"Hello", "World", 20, "Latest", 10, new Date(), "Nice Song", false));
+        boolean successfullyAssociatedTrack = trackDAO.associateWithPlayList(-1, createdTrack);
+
+        Assertions.assertFalse(successfullyAssociatedTrack);
+
+        Assertions.assertFalse(trackDAO.allForPlaylistId(createdPlayList.getId()).getTracks().contains(createdTrack));
+    }
+
+    @Test
     public void testTrackIsNotAssociatedWithPlayListAfterDisassociation() {
         TrackDAO trackDAO = this.getTrackDAO();
         PlayListDAO playListDAO = this.getPlayListDAO();
@@ -73,6 +87,19 @@ public class TrackDAOTest extends DatabaseTest {
         trackDAO.disassociateWithPlayList(createdPlayList.getId(), createdTrack.getId());
 
         Assertions.assertFalse(trackDAO.allForPlaylistId(createdPlayList.getId()).getTracks().contains(createdTrack));
+    }
+
+    @Test
+    public void testAssociateReturnsFalseIfTheDisassociationFailed() {
+        TrackDAO trackDAO = this.getTrackDAO();
+        PlayListDAO playListDAO = this.getPlayListDAO();
+
+        PlayListDTO createdPlayList = playListDAO.create(1, new PlayListDTO(-1, "Playlists 1",false, new ArrayList<>()));
+        TrackDTO createdTrack = trackDAO.create(new TrackDTO(1,"Hello", "World", 20, "Latest", 10, new Date(), "Nice Song", false));
+        trackDAO.associateWithPlayList(1, createdTrack);
+        trackDAO.disassociateWithPlayList(-1, -1);
+
+        Assertions.assertTrue(trackDAO.allForPlaylistId(createdPlayList.getId()).getTracks().contains(createdTrack));
     }
 
     @Test
