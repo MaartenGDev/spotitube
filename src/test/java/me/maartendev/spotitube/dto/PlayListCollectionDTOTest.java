@@ -12,12 +12,25 @@ public class PlayListCollectionDTOTest {
     public void shouldReturnTheTotalForAllTracks() {
         List<PlayListDTO> playLists = new ArrayList<>();
         List<TrackDTO> tracks = new ArrayList<>();
-        tracks.add(new TrackDTO(1,"Hello", "World", 20, "Latest", 10, new Date(), "Nice Song", false));
-        tracks.add(new TrackDTO(1,"Hello", "World", 40, "Latest", 10, new Date(), "Nice Song", false));
+        tracks.add(createTestTrackDTO().setDuration(20));
+        tracks.add(createTestTrackDTO().setDuration(40));
 
         playLists.add(new PlayListDTO(1, "PlayList1", false, tracks));
         PlayListCollectionDTO playListCollectionDTO = new PlayListCollectionDTO(playLists);
 
         Assertions.assertEquals(60, playListCollectionDTO.getLength());
+    }
+
+    private TrackDTO createTestTrackDTO() {
+        return new TrackDTO()
+                .setId(1)
+                .setTitle("Hello")
+                .setPerformer("World")
+                .setDuration(20)
+                .setAlbum("Latest")
+                .setDuration(10)
+                .setPublicationDate(new Date())
+                .setDescription("Nice Song")
+                .setOfflineAvailable(false);
     }
 }

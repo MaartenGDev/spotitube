@@ -15,40 +15,49 @@ public class TrackDTO {
     private String description;
     private boolean offlineAvailable;
 
-    public void setId(int id) {
+    public TrackDTO setId(int id) {
         this.id = id;
+        return this;
     }
 
-    public void setTitle(String title) {
+    public TrackDTO setTitle(String title) {
         this.title = title;
+        return this;
     }
 
-    public void setPerformer(String performer) {
+    public TrackDTO setPerformer(String performer) {
         this.performer = performer;
+        return this;
     }
 
-    public void setDuration(int duration) {
+    public TrackDTO setDuration(int duration) {
         this.duration = duration;
+        return this;
     }
 
-    public void setAlbum(String album) {
+    public TrackDTO setAlbum(String album) {
         this.album = album;
+        return this;
     }
 
-    public void setPlaycount(int playcount) {
+    public TrackDTO setPlaycount(int playcount) {
         this.playcount = playcount;
+        return this;
     }
 
-    public void setPublicationDate(Date publicationDate) {
+    public TrackDTO setPublicationDate(Date publicationDate) {
         this.publicationDate = publicationDate;
+        return this;
     }
 
-    public void setDescription(String description) {
+    public TrackDTO setDescription(String description) {
         this.description = description;
+        return this;
     }
 
-    public void setOfflineAvailable(boolean offlineAvailable) {
+    public TrackDTO setOfflineAvailable(boolean offlineAvailable) {
         this.offlineAvailable = offlineAvailable;
+        return this;
     }
 
     public int getId() {
@@ -89,25 +98,11 @@ public class TrackDTO {
         return offlineAvailable;
     }
 
-    public TrackDTO(){ }
-
-    public TrackDTO(int id, String title, String performer, int duration, String album, int playcount, Date publicationDate, String description, boolean offlineAvailable) {
-        this.id = id;
-        this.title = title;
-        this.performer = performer;
-        this.duration = duration;
-        this.album = album;
-        this.playcount = playcount;
-        this.publicationDate = publicationDate;
-        this.description = description;
-        this.offlineAvailable = offlineAvailable;
-    }
-
     @Override
     public int hashCode() {
         return super.hashCode();
     }
-    
+
     @Override
     public boolean equals(Object object) {
         if(!(object instanceof TrackDTO)) return false;

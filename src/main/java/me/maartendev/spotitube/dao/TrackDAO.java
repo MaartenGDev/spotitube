@@ -19,7 +19,16 @@ public class TrackDAO extends DAO {
     }
 
     private ResultSetRowTransformer<TrackDTO> getResultSetTransformer() {
-        return resultSet -> new TrackDTO(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("performer"), resultSet.getInt("duration"), resultSet.getString("album"), resultSet.getInt("playcount"), resultSet.getDate("publication_date"), resultSet.getString("description"), resultSet.getBoolean("offline_available"));
+        return resultSet -> new TrackDTO()
+                .setId(resultSet.getInt("id"))
+                .setTitle(resultSet.getString("title"))
+                .setPerformer(resultSet.getString("performer"))
+                .setDuration(resultSet.getInt("duration"))
+                .setAlbum(resultSet.getString("album"))
+                .setPlaycount(resultSet.getInt("playcount"))
+                .setPublicationDate(resultSet.getDate("publication_date"))
+                .setDescription(resultSet.getString("description"))
+                .setOfflineAvailable(resultSet.getBoolean("offline_available"));
     }
 
     private ResultSetRowTransformer<Map.Entry<Integer, TrackDTO>> getPlayListTracksTransformer() {

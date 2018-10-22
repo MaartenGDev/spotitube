@@ -14,8 +14,8 @@ public class TrackDAOTest extends DatabaseTest {
     private TrackDAO trackDAO;
     private PlayListDAO playListDAO;
 
-    private TrackDAO getTrackDAO(){
-        if(trackDAO != null){
+    private TrackDAO getTrackDAO() {
+        if (trackDAO != null) {
             return trackDAO;
         }
 
@@ -26,8 +26,8 @@ public class TrackDAOTest extends DatabaseTest {
         return trackDAO;
     }
 
-    private PlayListDAO getPlayListDAO(){
-        if(playListDAO != null) {
+    private PlayListDAO getPlayListDAO() {
+        if (playListDAO != null) {
             return playListDAO;
         }
 
@@ -42,7 +42,7 @@ public class TrackDAOTest extends DatabaseTest {
     @Test
     public void testCreateStoresTrackInDatabase() {
         TrackDAO trackDAO = this.getTrackDAO();
-        TrackDTO createdTrack = trackDAO.create(new TrackDTO(1,"Hello", "World", 20, "Latest", 10, new Date(), "Nice Song", false));
+        TrackDTO createdTrack = trackDAO.create(this.createTestTrackDTO());
 
         Assertions.assertEquals(createdTrack, trackDAO.find(createdTrack.getId()));
     }
@@ -52,8 +52,8 @@ public class TrackDAOTest extends DatabaseTest {
         TrackDAO trackDAO = this.getTrackDAO();
         PlayListDAO playListDAO = this.getPlayListDAO();
 
-        PlayListDTO createdPlayList = playListDAO.create(1, new PlayListDTO(-1, "Playlists 1",false, new ArrayList<>()));
-        TrackDTO createdTrack = trackDAO.create(new TrackDTO(1,"Hello", "World", 20, "Latest", 10, new Date(), "Nice Song", false));
+        PlayListDTO createdPlayList = playListDAO.create(1, new PlayListDTO(-1, "Playlists 1", false, new ArrayList<>()));
+        TrackDTO createdTrack = trackDAO.create(this.createTestTrackDTO());
         trackDAO.associateWithPlayList(createdPlayList.getId(), createdTrack);
 
         Assertions.assertTrue(trackDAO.allForPlaylistId(createdPlayList.getId()).getTracks().contains(createdTrack));
@@ -64,8 +64,8 @@ public class TrackDAOTest extends DatabaseTest {
         TrackDAO trackDAO = this.getTrackDAO();
         PlayListDAO playListDAO = this.getPlayListDAO();
 
-        PlayListDTO createdPlayList = playListDAO.create(1, new PlayListDTO(-1, "Playlists 1",false, new ArrayList<>()));
-        TrackDTO createdTrack = trackDAO.create(new TrackDTO(1,"Hello", "World", 20, "Latest", 10, new Date(), "Nice Song", false));
+        PlayListDTO createdPlayList = playListDAO.create(1, new PlayListDTO(-1, "Playlists 1", false, new ArrayList<>()));
+        TrackDTO createdTrack = trackDAO.create(this.createTestTrackDTO());
         boolean successfullyAssociatedTrack = trackDAO.associateWithPlayList(-1, createdTrack);
 
         Assertions.assertFalse(successfullyAssociatedTrack);
@@ -78,8 +78,8 @@ public class TrackDAOTest extends DatabaseTest {
         TrackDAO trackDAO = this.getTrackDAO();
         PlayListDAO playListDAO = this.getPlayListDAO();
 
-        PlayListDTO createdPlayList = playListDAO.create(1, new PlayListDTO(-1, "Playlists 1",false, new ArrayList<>()));
-        TrackDTO createdTrack = trackDAO.create(new TrackDTO(1,"Hello", "World", 20, "Latest", 10, new Date(), "Nice Song", false));
+        PlayListDTO createdPlayList = playListDAO.create(1, new PlayListDTO(-1, "Playlists 1", false, new ArrayList<>()));
+        TrackDTO createdTrack = trackDAO.create(this.createTestTrackDTO());
         trackDAO.associateWithPlayList(createdPlayList.getId(), createdTrack);
 
         Assertions.assertTrue(trackDAO.allForPlaylistId(createdPlayList.getId()).getTracks().contains(createdTrack));
@@ -94,8 +94,8 @@ public class TrackDAOTest extends DatabaseTest {
         TrackDAO trackDAO = this.getTrackDAO();
         PlayListDAO playListDAO = this.getPlayListDAO();
 
-        PlayListDTO createdPlayList = playListDAO.create(1, new PlayListDTO(-1, "Playlists 1",false, new ArrayList<>()));
-        TrackDTO createdTrack = trackDAO.create(new TrackDTO(1,"Hello", "World", 20, "Latest", 10, new Date(), "Nice Song", false));
+        PlayListDTO createdPlayList = playListDAO.create(1, new PlayListDTO(-1, "Playlists 1", false, new ArrayList<>()));
+        TrackDTO createdTrack = trackDAO.create(this.createTestTrackDTO());
         trackDAO.associateWithPlayList(1, createdTrack);
         trackDAO.disassociateWithPlayList(-1, -1);
 
@@ -106,17 +106,30 @@ public class TrackDAOTest extends DatabaseTest {
     public void testAllReturnsAllCreatedTracks() {
         TrackDAO trackDAO = this.getTrackDAO();
 
-        TrackDTO trackToDuplicate = new TrackDTO(1,"Hello", "World", 20, "Latest", 10, new Date(), "Nice Song", false);
+        TrackDTO trackToDuplicate = this.createTestTrackDTO();
         List<TrackDTO> tracksToCreate = new ArrayList<>();
         tracksToCreate.add(trackToDuplicate);
         tracksToCreate.add(trackToDuplicate);
         tracksToCreate.add(trackToDuplicate);
 
-        for (TrackDTO trackToCreate : tracksToCreate){
+        for (TrackDTO trackToCreate : tracksToCreate) {
             trackDAO.create(trackToCreate);
         }
 
 
-        Assertions.assertEquals(tracksToCreate.size(),trackDAO.all().getTracks().size());
+        Assertions.assertEquals(tracksToCreate.size(), trackDAO.all().getTracks().size());
+    }
+
+    private TrackDTO createTestTrackDTO() {
+        return new TrackDTO()
+                .setId(1)
+                .setTitle("Hello")
+                .setPerformer("World")
+                .setDuration(20)
+                .setAlbum("Latest")
+                .setDuration(10)
+                .setPublicationDate(new Date())
+                .setDescription("Nice Song")
+                .setOfflineAvailable(false);
     }
 }
