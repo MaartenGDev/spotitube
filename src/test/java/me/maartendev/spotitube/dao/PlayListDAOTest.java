@@ -1,6 +1,7 @@
 package me.maartendev.spotitube.dao;
 
 import me.maartendev.spotitube.dto.PlayListDTO;
+import me.maartendev.spotitube.dto.UserDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -94,5 +95,29 @@ public class PlayListDAOTest extends DatabaseTest {
         playListDAO.update(createdPlayList.getId(), createdPlayList);
 
         Assertions.assertEquals(createdPlayList, playListDAO.find(createdPlayList.getId()));
+    }
+
+    @Test
+    public void testAllForUserIdShouldReturnAllPlayListsWithOwnerFlagsForThatUser() {
+        PlayListDAO playListDAO = this.getPlayListDAO();
+        UserDAO userDAO = new UserDAO();
+        userDAO.setDataSource(this.getDataSource());
+
+        UserDTO firstUser = userDAO.create(new UserDTO(-1, "Hello", "World", "zz-qq"));
+        UserDTO secondUser = userDAO.create(new UserDTO(-1, "World", "Hello", "qq-qq"));
+
+
+        PlayListDTO playListForFirstUser = new PlayListDTO(-1, "PlayList From User 1", true, new ArrayList<>());
+        playListDAO.create(firstUser.getId(), playListForFirstUser);
+
+        PlayListDTO playListForSecondUser = new PlayListDTO(-1, "PlayList From User 2", true, new ArrayList<>());
+        playListDAO.create(secondUser.getId(), playListForSecondUser);
+
+
+        List<PlayListDTO> playLists = playListDAO.allForUserId(firstUser.getId()).getPlaylists();
+
+        Assertions.assertEquals(2, playLists.size());
+        Assertions.assertTrue(playLists.get(0).isOwner());
+        Assertions.assertFalse(playLists.get(1).isOwner());
     }
 }

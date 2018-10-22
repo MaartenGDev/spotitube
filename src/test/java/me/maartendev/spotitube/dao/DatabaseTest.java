@@ -18,7 +18,7 @@ public abstract class DatabaseTest {
     private DataSource dataSource;
 
     @BeforeEach
-    public void setupDatabase() {
+    protected void setupDatabase() {
         DataSource dataSource = this.getDataSource();
         String structurePath = new File("db/structure.sql").getAbsolutePath();
         String structureQuery = null;
@@ -62,7 +62,7 @@ public abstract class DatabaseTest {
     }
 
     @AfterEach
-    private void tearDownDatabase(){
+    protected void tearDownDatabase(){
         this.runQuery(dataSource, "DROP TABLE playlist_track; DROP TABLE playlists; DROP TABLE tracks; DROP TABLE users;");
     }
 }
