@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: app.Dockerfile
     environment:
-      DNS: "jdbc:mariadb://db/spotitube?user=root&password=root"
+      DSN: "jdbc:mariadb://db/spotitube?user=root&password=root"
     ports:
     - "8090:8080"
     depends_on:

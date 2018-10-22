@@ -2,6 +2,7 @@ package me.maartendev.spotitube.producers;
 
 import javax.enterprise.inject.Produces;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -13,7 +14,13 @@ public class FileConfigPropertiesProducer {
         Properties properties = new Properties();
 
         try {
-            properties.load(getClass().getClassLoader().getResourceAsStream("database.properties"));
+            InputStream propertyStream = getClass().getClassLoader().getResourceAsStream("database.properties");
+
+            if(propertyStream == null){
+                return properties;
+            }
+
+            properties.load(propertyStream);
         } catch (IOException e) {
             LOGGER.severe(e.getMessage());
         }
