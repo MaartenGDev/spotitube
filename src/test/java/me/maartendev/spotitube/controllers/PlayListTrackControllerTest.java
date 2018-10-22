@@ -60,6 +60,34 @@ public class PlayListTrackControllerTest {
     }
 
     @Test
+    public void testShouldReturnOkWhenPlayListTrackCouldBeCreated() {
+        PlayListTrackController playListTrackController = new PlayListTrackController();
+
+        TrackDAO trackDAO = Mockito.mock(TrackDAO.class);
+        playListTrackController.setTrackDAO(trackDAO);
+
+        Mockito.when(trackDAO.associateWithPlayList(Mockito.anyInt(), Mockito.anyObject())).thenReturn(true);
+
+        Response response = playListTrackController.store(1, new TrackDTO());
+
+        Assertions.assertEquals(200, response.getStatus());
+    }
+
+    @Test
+    public void testShouldReturnServerErrorIfTheTrackCouldBeDisassociated() {
+        PlayListTrackController playListTrackController = new PlayListTrackController();
+
+        TrackDAO trackDAO = Mockito.mock(TrackDAO.class);
+        playListTrackController.setTrackDAO(trackDAO);
+
+        Mockito.when(trackDAO.disassociateWithPlayList(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
+
+        Response response = playListTrackController.destroy(1, 1);
+
+        Assertions.assertEquals(200, response.getStatus());
+    }
+
+    @Test
     public void testShouldReturnServerErrorIfTheTrackCouldNotBeDisassociated() {
         PlayListTrackController playListTrackController = new PlayListTrackController();
 
