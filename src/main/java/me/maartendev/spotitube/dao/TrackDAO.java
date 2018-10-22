@@ -1,6 +1,5 @@
 package me.maartendev.spotitube.dao;
 
-import me.maartendev.spotitube.dto.PlayListDTO;
 import me.maartendev.spotitube.dto.TrackCollectionDTO;
 import me.maartendev.spotitube.dto.TrackDTO;
 import me.maartendev.spotitube.transformers.ResultSetRowTransformer;

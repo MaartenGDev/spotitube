@@ -24,6 +24,10 @@ public class UserDAO extends DAO {
         };
     }
 
+    public List<UserDTO> all(){
+        return this.fetchResultsForQuery("SELECT * FROM users", defaultResultSetRowTransformer);
+    }
+
 
     public UserDTO findByToken(String token){
         List<Object> bindings = new ArrayList<>();
@@ -47,7 +51,9 @@ public class UserDAO extends DAO {
 
         try {
             this.runQuery("INSERT INTO users(user, password, token) VALUES (?, ?, ?)", bindings);
-            return userDTO;
+
+            List<UserDTO> users = this.all();
+            return users.get(users.size() -1);
         } catch (SQLException e) {
             return null;
         }

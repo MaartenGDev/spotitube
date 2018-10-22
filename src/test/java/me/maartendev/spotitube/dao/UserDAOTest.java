@@ -30,7 +30,8 @@ public class UserDAOTest extends DatabaseTest {
         userDAO.setDataSource(this.getDataSource());
 
         UserDTO userToCreate = new UserDTO(4, "Test", "User", "qqq-zzzz");
-        userDAO.create(userToCreate);
+        UserDTO createdUser = userDAO.create(userToCreate);
+        userToCreate.setId(createdUser.getId());
 
         UserDTO foundUser = userDAO.findByToken("qqq-zzzz");
 
@@ -43,7 +44,8 @@ public class UserDAOTest extends DatabaseTest {
         userDAO.setDataSource(this.getDataSource());
 
         UserDTO userToCreate = new UserDTO(5, "Spotitube", "Secure", "qqq-zzz");
-        userDAO.create(userToCreate);
+        UserDTO createdUser = userDAO.create(userToCreate);
+        userToCreate.setId(createdUser.getId());
 
         UserDTO foundUser = userDAO.findByUser("Spotitube");
 
