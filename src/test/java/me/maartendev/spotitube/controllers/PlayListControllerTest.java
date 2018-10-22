@@ -8,8 +8,10 @@ import me.maartendev.spotitube.dto.PlayListCollectionDTO;
 import me.maartendev.spotitube.dto.UserDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,5 +108,54 @@ public class PlayListControllerTest {
 
         PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playListController.destroy(playlistIdToDelete, AUTH_TOKEN).getEntity();
         Assertions.assertEquals(expectedPlayListCollection.getPlaylists().size(), actualPlayListCollection.getPlaylists().size());
+    }
+
+    @Test
+    public void testShouldReturnServerErrorIfThePlayListCouldNotBeDeleted() {
+        PlayListController playListController = this.buildController();
+
+        PlayListDAO playListDAO = Mockito.mock(PlayListDAO.class);
+        playListController.setPlayListDAO(playListDAO);
+        Mockito.when(playListDAO.delete(Mockito.anyInt())).thenReturn(false);
+
+        Response response = playListController.destroy(-1, AUTH_TOKEN);
+        Assertions.assertEquals(500, response.getStatus());
+    }
+
+    @Test
+    public void testShouldReturnServerErrorIfThePlayListCouldNotUpdated() {
+        PlayListController playListController = this.buildController();
+
+        PlayListDAO playListDAO = Mockito.mock(PlayListDAO.class);
+        playListController.setPlayListDAO(playListDAO);
+        Mockito.when(playListDAO.update(Mockito.anyInt(), Mockito.anyObject())).thenReturn(null);
+
+        Response response = playListController.update(-1, new PlayListDTO(), AUTH_TOKEN);
+        Assertions.assertEquals(500, response.getStatus());
+    }
+
+
+
+    @Test
+    public void testShouldReturnEmptyPlaylistCollectionIfNoUserWasFound() {
+        PlayListController playListController = new PlayListController();
+
+        UserDAO userDAO = Mockito.mock(UserDAO.class);
+        playListController.setUserDAO(userDAO);
+
+        Mockito.when(userDAO.findByToken(Mockito.anyObject())).thenReturn(null);
+
+
+        PlayListDAO playListDAO = Mockito.mock(PlayListDAO.class);
+        playListController.setPlayListDAO(playListDAO);
+
+        List<PlayListDTO> playLists = new ArrayList<>();
+        playLists.add(new PlayListDTO());
+
+        PlayListCollectionDTO expectedPlayListCollection = new PlayListCollectionDTO(playLists);
+        Mockito.when(playListDAO.allForUserId(Mockito.anyInt())).thenReturn(expectedPlayListCollection);
+
+        PlayListCollectionDTO actualPlayListCollection = (PlayListCollectionDTO) playListController.index("aa").getEntity();
+        Assertions.assertEquals(0, actualPlayListCollection.getPlaylists().size());
     }
 }
