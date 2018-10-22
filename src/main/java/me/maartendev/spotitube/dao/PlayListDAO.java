@@ -6,7 +6,6 @@ import me.maartendev.spotitube.dto.TrackDTO;
 import me.maartendev.spotitube.transformers.ResultSetRowTransformer;
 
 import javax.inject.Inject;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;

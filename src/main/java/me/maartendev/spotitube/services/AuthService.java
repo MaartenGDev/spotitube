@@ -4,7 +4,6 @@ import me.maartendev.spotitube.dao.UserDAO;
 import me.maartendev.spotitube.dto.UserDTO;
 
 import javax.inject.Inject;
-import java.sql.SQLException;
 
 public class AuthService {
     private UserDAO userDAO;

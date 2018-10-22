@@ -1,7 +1,6 @@
 package me.maartendev.spotitube.config;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Properties;
 
 public class DatabaseProperties {
@@ -11,8 +10,6 @@ public class DatabaseProperties {
     public void setProperties(Properties properties) {
         this.properties = properties;
     }
-
-    public DatabaseProperties() { }
 
     public String getDriver() {
         return this.getPropertyValue("DRIVER");

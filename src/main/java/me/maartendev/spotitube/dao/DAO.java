@@ -45,7 +45,7 @@ public abstract class DAO {
     protected <K> K fetchResultForQuery(String query, ResultSetRowTransformer<K> transformer, List bindings) {
         List<K> results = this.fetchResultsForQuery(query, transformer, bindings);
 
-        return results.size() > 0 ? results.get(0) : null;
+        return results.isEmpty() ? null : results.get(0);
     }
 
     protected <K> List<K> fetchResultsForQuery(String query, ResultSetRowTransformer<K> transformer) {
