@@ -51,27 +51,50 @@ public class PlayListController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("id") int id, PlayListDTO playListDTO, @QueryParam("token") String token) {
+        UserDTO authenticatedUser = userDAO.findByToken(token);
+        PlayListDTO playListToUpdate = playListDAO.find(id);
+
+        if(playListToUpdate == null){
+            return Response.status(404).build();
+        }
+
+        if(playListToUpdate.getOwnerId() != authenticatedUser.getId()){
+            return Response.status(403).build();
+        }
+
         PlayListDTO updatedPlayList = playListDAO.update(id, playListDTO);
 
         if (updatedPlayList == null) {
             return Response.serverError().build();
         }
 
-        return Response.ok(getAllPlayListsForAuthenticationToken(token)).build();
+        return Response.ok(playListDAO.allForUserId(authenticatedUser.getId())).build();
     }
 
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response destroy(@PathParam("id") int id, @QueryParam("token") String token) {
+        UserDTO authenticatedUser = userDAO.findByToken(token);
+        PlayListDTO playListToDelete = playListDAO.find(id);
+
+        if(playListToDelete == null){
+            return Response.status(404).build();
+        }
+
+        if(playListToDelete.getOwnerId() != authenticatedUser.getId()){
+            return Response.status(403).build();
+        }
+
         boolean hasBeenDeleted = playListDAO.delete(id);
 
         if (!hasBeenDeleted) {
             return Response.serverError().build();
         }
 
-        return Response.ok(getAllPlayListsForAuthenticationToken(token)).build();
+        return Response.ok(playListDAO.allForUserId(authenticatedUser.getId())).build();
     }
+
 
     private PlayListCollectionDTO getAllPlayListsForAuthenticationToken(String token) {
         UserDTO authenticatedUser = userDAO.findByToken(token);
