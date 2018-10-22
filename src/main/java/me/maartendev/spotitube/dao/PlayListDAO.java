@@ -31,7 +31,14 @@ public class PlayListDAO extends DAO {
     private ResultSetRowTransformer<PlayListDTO> getResultSetTransformer() {
         return resultSet -> {
             try {
-                return new PlayListDTO(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBoolean("is_owner"), new ArrayList<>());
+                PlayListDTO playListDTO = new PlayListDTO();
+                playListDTO.setId(resultSet.getInt("id"));
+                playListDTO.setName(resultSet.getString("name"));
+                playListDTO.setOwnerId(resultSet.getInt("owner_id"));
+                playListDTO.setOwner(resultSet.getBoolean("is_owner"));
+                playListDTO.setTracks(new ArrayList<>());
+
+                return playListDTO;
             } catch (SQLException e) {
                 return null;
             }
