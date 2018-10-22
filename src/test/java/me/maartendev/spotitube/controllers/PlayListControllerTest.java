@@ -1,5 +1,6 @@
-package me.maartendev.spotitube;
+package me.maartendev.spotitube.controllers;
 
+import me.maartendev.spotitube.PlayListController;
 import me.maartendev.spotitube.dao.PlayListDAO;
 import me.maartendev.spotitube.dao.UserDAO;
 import me.maartendev.spotitube.dto.PlayListDTO;

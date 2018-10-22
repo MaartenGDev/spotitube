@@ -1,5 +1,6 @@
-package me.maartendev.spotitube;
+package me.maartendev.spotitube.controllers;
 
+import me.maartendev.spotitube.LoginController;
 import me.maartendev.spotitube.dto.UserDTO;
 import me.maartendev.spotitube.services.AuthService;
 import org.junit.jupiter.api.Assertions;

@@ -1,5 +1,6 @@
-package me.maartendev.spotitube;
+package me.maartendev.spotitube.controllers;
 
+import me.maartendev.spotitube.TrackController;
 import me.maartendev.spotitube.dao.TrackDAO;
 import me.maartendev.spotitube.dto.TrackCollectionDTO;
 import me.maartendev.spotitube.dto.TrackDTO;
