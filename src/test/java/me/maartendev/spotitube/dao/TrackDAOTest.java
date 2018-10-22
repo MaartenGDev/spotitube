@@ -120,6 +120,22 @@ public class TrackDAOTest extends DatabaseTest {
         Assertions.assertEquals(tracksToCreate.size(), trackDAO.all().getTracks().size());
     }
 
+    @Test
+    public void testAllNotInPlayListIdShouldReturnAllTracksThatAreNotInThePlayList() {
+        TrackDAO trackDAO = this.getTrackDAO();
+        PlayListDAO playListDAO = this.getPlayListDAO();
+
+        PlayListDTO firstPlayList = playListDAO.create(1, new PlayListDTO(-1, "Playlists 1", false, new ArrayList<>()));
+        PlayListDTO secondPlayList = playListDAO.create(1, new PlayListDTO(-1, "Playlists 2", false, new ArrayList<>()));
+
+        // Associate Track with the first playList
+        TrackDTO createdTrack = trackDAO.create(this.createTestTrackDTO());
+        trackDAO.associateWithPlayList(firstPlayList.getId(), createdTrack);
+
+        Assertions.assertEquals(0, trackDAO.allNotInPlaylistId(firstPlayList.getId()).getTracks().size());
+        Assertions.assertEquals(1, trackDAO.allNotInPlaylistId(secondPlayList.getId()).getTracks().size());
+    }
+
     private TrackDTO createTestTrackDTO() {
         TrackDTO trackDTO = new TrackDTO();
 
