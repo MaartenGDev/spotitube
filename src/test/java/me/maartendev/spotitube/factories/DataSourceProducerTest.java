@@ -1,4 +1,4 @@
-package me.maartendev.spotitube.producers;
+package me.maartendev.spotitube.factories;
 
 import me.maartendev.spotitube.config.DatabaseProperties;
 import org.junit.jupiter.api.Assertions;
@@ -10,7 +10,7 @@ import java.util.Properties;
 public class DataSourceProducerTest {
     @Test
     public void testShouldReturnDataSourceConfiguredUsingDataProperties(){
-        DataSourceProducer dataSourceProducer = new DataSourceProducer();
+        DataSourceFactory dataSourceFactory = new DataSourceFactory();
 
         DatabaseProperties databaseProperties = Mockito.mock(DatabaseProperties.class);
         Mockito.when(databaseProperties.getDriver()).thenReturn("jdbc://example");
@@ -18,8 +18,8 @@ public class DataSourceProducerTest {
 
         databaseProperties.setProperties(new Properties());
 
-        dataSourceProducer.setDatabaseProperties(databaseProperties);
+        dataSourceFactory.setDatabaseProperties(databaseProperties);
 
-        Assertions.assertNotNull(dataSourceProducer.getDataSource());
+        Assertions.assertNotNull(dataSourceFactory.build());
     }
 }
