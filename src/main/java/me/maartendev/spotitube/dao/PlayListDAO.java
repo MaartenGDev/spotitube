@@ -7,15 +7,13 @@ import me.maartendev.spotitube.transformers.ResultSetRowTransformer;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class PlayListDAO extends DAO {
     private static final Logger LOGGER = Logger.getLogger(DAO.class.getName());
-    private ResultSetRowTransformer<PlayListDTO> defaultResultSetRowTransformer;
+    private final ResultSetRowTransformer<PlayListDTO> defaultResultSetRowTransformer;
+    private final ResultSetRowTransformer<Map.Entry<Integer, Integer>> playListTracksIdsResultSetTransformer;
     private TrackDAO trackDAO;
 
     @Inject
@@ -26,6 +24,7 @@ public class PlayListDAO extends DAO {
 
     public PlayListDAO() {
         this.defaultResultSetRowTransformer = this.getResultSetTransformer();
+        this.playListTracksIdsResultSetTransformer = this.getPlayListTracksIdsResultSetTransformer();
     }
 
     private ResultSetRowTransformer<PlayListDTO> getResultSetTransformer() {
@@ -39,6 +38,16 @@ public class PlayListDAO extends DAO {
                 playListDTO.setTracks(new ArrayList<>());
 
                 return playListDTO;
+            } catch (SQLException e) {
+                return null;
+            }
+        };
+    }
+
+    private ResultSetRowTransformer<Map.Entry<Integer, Integer>> getPlayListTracksIdsResultSetTransformer() {
+        return resultSet -> {
+            try {
+                return new AbstractMap.SimpleEntry<>(resultSet.getInt("playlist_id"), resultSet.getInt("track_id"));
             } catch (SQLException e) {
                 return null;
             }
@@ -118,5 +127,38 @@ public class PlayListDAO extends DAO {
         }
 
         return false;
+    }
+
+    public Map<Integer, PlayListDTO> all() {
+        Map<Integer, PlayListDTO> playLists = new HashMap<>();
+
+        for (PlayListDTO playList : this.fetchResultsForQuery("SELECT *, 1 as is_owner FROM playlists", defaultResultSetRowTransformer)) {
+            playLists.put(playList.getId(), playList);
+        }
+
+        Map<Integer, List<Integer>> trackIdsByPlayListIds = getTracksForPlayList(new ArrayList<>(playLists.keySet()));
+
+        for (int key : playLists.keySet()) {
+            playLists.get(key).setTrackIds(trackIdsByPlayListIds.get(key));
+        }
+
+        return playLists;
+    }
+
+    private Map<Integer, List<Integer>> getTracksForPlayList(List<Integer> playListIds) {
+        List<Object> bindings = new ArrayList<>();
+        bindings.add(playListIds);
+
+        Map<Integer, List<Integer>> playListTrackIds = new HashMap<>();
+
+        for (Integer lessonId : playListIds) {
+            playListTrackIds.put(lessonId, new ArrayList<>());
+        }
+
+        for (Map.Entry<Integer, Integer> playListTrackId : this.fetchResultsForQuery("SELECT * FROM playlist_track WHERE playlist_id IN (?)", playListTracksIdsResultSetTransformer, bindings)) {
+            playListTrackIds.get(playListTrackId.getKey()).add(playListTrackId.getValue());
+        }
+
+        return playListTrackIds;
     }
 }

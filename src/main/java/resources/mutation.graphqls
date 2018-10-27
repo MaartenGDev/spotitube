@@ -1,0 +1,7 @@
+type Mutation {
+    createPlayList(input: PlayListInput): PlayList
+}
+
+input PlayListInput {
+    name: String
+}

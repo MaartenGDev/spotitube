@@ -1,7 +1,7 @@
 package me.maartendev.spotitube;
 
 import me.maartendev.spotitube.dto.UserDTO;
-import me.maartendev.spotitube.dto.LoginResponseDTO;
+import me.maartendev.spotitube.dto.requests.LoginResponseDTO;
 import me.maartendev.spotitube.services.AuthService;
 
 import javax.inject.Inject;

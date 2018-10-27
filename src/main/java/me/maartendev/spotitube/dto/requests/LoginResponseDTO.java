@@ -1,4 +1,4 @@
-package me.maartendev.spotitube.dto;
+package me.maartendev.spotitube.dto.requests;
 
 public class LoginResponseDTO {
     private String token;

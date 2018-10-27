@@ -123,4 +123,11 @@ public class TrackDAO extends DAO {
 
         return this.fetchResultForQuery("SELECT *, 0 as offline_available FROM tracks WHERE id=?", defaultResultSetRowTransformer, bindings);
     }
+
+    public List<TrackDTO> read(List<Integer> trackIds) {
+        List<Object> bindings = new ArrayList<>();
+        bindings.add(trackIds);
+
+        return this.fetchResultsForQuery("SELECT *, 0 as offline_available FROM tracks WHERE id IN (?)", defaultResultSetRowTransformer, bindings);
+    }
 }

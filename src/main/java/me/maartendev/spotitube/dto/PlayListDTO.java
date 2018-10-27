@@ -8,6 +8,7 @@ public class PlayListDTO {
     private String name;
     private boolean owner;
     private List<TrackDTO> tracks;
+    private List<Integer> trackIds;
 
     public int getId() {
         return id;
@@ -73,5 +74,13 @@ public class PlayListDTO {
                 && this.isOwner() == (playListDTO.isOwner())
                 && this.getTracks().equals(playListDTO.getTracks());
 
+    }
+
+    public void setTrackIds(List<Integer> trackIds) {
+        this.trackIds = trackIds;
+    }
+
+    public List<Integer> getTrackIds() {
+        return trackIds;
     }
 }
