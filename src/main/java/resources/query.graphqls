@@ -11,10 +11,17 @@ type PlayList {
     id: Int!
     name: String!
     tracks: [Track!]!
+    owner: Boolean!
 }
-
 
 type Track {
     id: Int!
     title: String!
+    performer: String!
+    duration: Int!
+    album: String!
+    playcount: Int!
+    publicationDate: String!
+    description: String!
+    offlineAvailable: Boolean!
 }

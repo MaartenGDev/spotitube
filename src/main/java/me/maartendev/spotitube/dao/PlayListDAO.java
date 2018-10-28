@@ -129,14 +129,17 @@ public class PlayListDAO extends DAO {
         return false;
     }
 
-    public Map<Integer, PlayListDTO> all() {
+    public Map<Integer, PlayListDTO> allTailoredToUserIdWithTrackIds(int userId) {
+        List<Object> bindings = new ArrayList<>();
+        bindings.add(userId);
+
         Map<Integer, PlayListDTO> playLists = new HashMap<>();
 
-        for (PlayListDTO playList : this.fetchResultsForQuery("SELECT *, 1 as is_owner FROM playlists", defaultResultSetRowTransformer)) {
+        for (PlayListDTO playList : this.fetchResultsForQuery("SELECT *, owner_id=? as is_owner FROM playlists", defaultResultSetRowTransformer, bindings)) {
             playLists.put(playList.getId(), playList);
         }
 
-        Map<Integer, List<Integer>> trackIdsByPlayListIds = getTracksForPlayList(new ArrayList<>(playLists.keySet()));
+        Map<Integer, List<Integer>> trackIdsByPlayListIds = getTrackIdsForPlayList(new ArrayList<>(playLists.keySet()));
 
         for (int key : playLists.keySet()) {
             playLists.get(key).setTrackIds(trackIdsByPlayListIds.get(key));
@@ -145,7 +148,7 @@ public class PlayListDAO extends DAO {
         return playLists;
     }
 
-    private Map<Integer, List<Integer>> getTracksForPlayList(List<Integer> playListIds) {
+    private Map<Integer, List<Integer>> getTrackIdsForPlayList(List<Integer> playListIds) {
         List<Object> bindings = new ArrayList<>();
         bindings.add(playListIds);
 
