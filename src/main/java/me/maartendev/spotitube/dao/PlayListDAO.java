@@ -62,7 +62,11 @@ public class PlayListDAO extends DAO {
         List<Map.Entry<Integer, TrackDTO>> tracks = trackDAO.allUsedInPlayLists();
 
         for (Map.Entry<Integer, TrackDTO> playListTrack : tracks) {
-            playListsById.get(playListTrack.getKey()).getTracks().add(playListTrack.getValue());
+            int playListId = playListTrack.getKey();
+            TrackDTO currentTrack = playListTrack.getValue();
+
+            playListsById.get(playListId).getTracks().add(currentTrack);
+            playListsById.get(playListId).getTrackIds().add(currentTrack.getId());
         }
 
         return new PlayListCollectionDTO(new ArrayList<>(playListsById.values()));

@@ -1,5 +1,6 @@
 package me.maartendev.spotitube.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayListDTO {
@@ -7,8 +8,8 @@ public class PlayListDTO {
     private int ownerId;
     private String name;
     private boolean owner;
-    private List<TrackDTO> tracks;
-    private List<Integer> trackIds;
+    private List<TrackDTO> tracks = new ArrayList<>();
+    private List<Integer> trackIds = new ArrayList<>();
 
     public int getId() {
         return id;

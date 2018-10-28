@@ -10,14 +10,16 @@ import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
 import me.maartendev.spotitube.dao.PlayListDAO;
 import me.maartendev.spotitube.dao.TrackDAO;
+import me.maartendev.spotitube.dao.UserDAO;
 import me.maartendev.spotitube.dto.PlayListDTO;
 import me.maartendev.spotitube.dto.TrackDTO;
+import me.maartendev.spotitube.dto.requests.LoginResponseDTO;
 import me.maartendev.spotitube.graphql.datafetchers.DataFetcherFactory;
 import me.maartendev.spotitube.graphql.dataloaders.DataLoaderFactory;
+import me.maartendev.spotitube.services.AuthService;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
 
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import java.io.File;
 import java.net.URL;
@@ -29,7 +31,10 @@ import static graphql.schema.idl.RuntimeWiring.newRuntimeWiring;
 public class GraphQLFactory {
     private PlayListDAO playListDAO;
     private TrackDAO trackDAO;
+    private UserDAO userDAO;
+    private AuthService authService;
     private DataFetcherFactory dataFetcherFactory;
+    private DataLoaderRegistry dataLoaderRegistry;
 
     @Inject
     public void setPlayListDAO(PlayListDAO playListDAO) {
@@ -42,11 +47,21 @@ public class GraphQLFactory {
     }
 
     @Inject
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    @Inject
+    public void setAuthService(AuthService authService) {
+        this.authService = authService;
+    }
+
+
+    @Inject
     public void setDataFetcherFactory(DataFetcherFactory dataFetcherFactory) {
         this.dataFetcherFactory = dataFetcherFactory;
     }
 
-    @Produces
     public GraphQL build() {
         SchemaParser schemaParser = new SchemaParser();
         File querySchema = this.getResourceFile("query.graphqls");
@@ -61,6 +76,8 @@ public class GraphQLFactory {
         DataLoaderFactory dataLoaderFactory = new DataLoaderFactory();
 
         DataFetcher<List<PlayListDTO>> playListsDataFetcher = dataFetcherFactory.getPlayListDataFetcher(playListDAO);
+        DataFetcher<PlayListDTO> createPlayListMutationDataFetcher = dataFetcherFactory.getCreatePlayListMutationDataFetcher(playListDAO);
+        DataFetcher<LoginResponseDTO> lLoginMutationDataFetcher = dataFetcherFactory.getLoginMutationDataFetcher(authService);
 
         DataLoader<Integer, TrackDTO> trackDataLoader = dataLoaderFactory.getTrackDataLoader(trackDAO);
         registry.register("trackDataLoader", trackDataLoader);
@@ -73,13 +90,18 @@ public class GraphQLFactory {
                 .type("PlayList", typeWiring -> typeWiring
                         .dataFetcher("tracks", playlistTracksDataFetcher)
                 )
+                .type("Mutation", typeWiring -> typeWiring
+                        .dataFetcher("createPlayList", createPlayListMutationDataFetcher)
+                        .dataFetcher("login", lLoginMutationDataFetcher)
+                )
                 .build();
 
         SchemaGenerator schemaGenerator = new SchemaGenerator();
         GraphQLSchema graphQLSchema = schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring);
 
+        this.dataLoaderRegistry = registry;
 
-        DataLoaderDispatcherInstrumentation dataLoaderDispatcherInstrumentation = new DataLoaderDispatcherInstrumentation(registry);
+        DataLoaderDispatcherInstrumentation dataLoaderDispatcherInstrumentation = new DataLoaderDispatcherInstrumentation();
         return GraphQL.newGraphQL(graphQLSchema)
                 .instrumentation(dataLoaderDispatcherInstrumentation)
                 .build();
@@ -97,5 +119,9 @@ public class GraphQLFactory {
         }
 
         return schemaURL.getFile();
+    }
+
+    public DataLoaderRegistry getDataLoaderRegistry() {
+        return dataLoaderRegistry;
     }
 }

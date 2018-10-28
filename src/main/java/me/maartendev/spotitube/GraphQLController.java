@@ -7,6 +7,7 @@ import me.maartendev.spotitube.dao.UserDAO;
 import me.maartendev.spotitube.dto.UserDTO;
 import me.maartendev.spotitube.dto.requests.GraphQLRequest;
 import me.maartendev.spotitube.dto.requests.GraphQLResponse;
+import me.maartendev.spotitube.factories.GraphQLFactory;
 import me.maartendev.spotitube.graphql.RequestContext;
 
 import javax.inject.Inject;
@@ -20,12 +21,12 @@ import java.nio.file.Paths;
 
 @Path("/graphql")
 public class GraphQLController {
-    private GraphQL graphQL;
+    private GraphQLFactory graphQLFactory;
     private UserDAO userDAO;
 
     @Inject
-    public void setGraphQL(GraphQL graphQL) {
-        this.graphQL = graphQL;
+    public void setGraphQLFactory(GraphQLFactory graphQLFactory) {
+        this.graphQLFactory = graphQLFactory;
     }
 
     @Inject
@@ -51,14 +52,16 @@ public class GraphQLController {
         RequestContext context = new RequestContext();
         context.setUser(authenticatedUser);
 
+        GraphQL graphQLFactory = this.graphQLFactory.build();
         ExecutionInput executionInput = ExecutionInput.newExecutionInput()
                 .query(request.getQuery())
                 .variables(request.getVariables())
+                .dataLoaderRegistry(this.graphQLFactory.getDataLoaderRegistry())
                 .context(context)
                 .build();
 
 
-        ExecutionResult executionResult = graphQL.execute(executionInput);
+        ExecutionResult executionResult = graphQLFactory.execute(executionInput);
 
         return Response.ok(new GraphQLResponse(executionResult.getData(), executionResult.getErrors())).build();
     }

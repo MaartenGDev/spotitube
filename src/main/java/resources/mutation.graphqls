@@ -1,7 +1,18 @@
 type Mutation {
-    createPlayList(input: PlayListInput): PlayList
+    createPlayList(input: PlayListInput!): PlayList,
+    login(input: LoginInput!): LoginOutput
 }
 
 input PlayListInput {
-    name: String
+    name: String!
+}
+
+input LoginInput {
+    user: String!
+    password: String!
+}
+
+type LoginOutput {
+    user: String
+    token: String
 }
