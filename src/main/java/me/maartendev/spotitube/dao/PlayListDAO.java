@@ -54,7 +54,7 @@ public class PlayListDAO extends DAO {
         };
     }
 
-    public PlayListCollectionDTO allForUserId(int userId) {
+    public PlayListCollectionDTO allTailoredToUserId(int userId) {
         List<Object> bindings = new ArrayList<>();
         bindings.add(userId);
 
@@ -101,7 +101,7 @@ public class PlayListDAO extends DAO {
             return null;
         }
 
-        List<PlayListDTO> allPlayLists = this.allForUserId(ownerId).getPlaylists();
+        List<PlayListDTO> allPlayLists = this.allTailoredToUserId(ownerId).getPlaylists();
         return allPlayLists.get(allPlayLists.size() -1);
     }
 

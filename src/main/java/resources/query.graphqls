@@ -4,7 +4,8 @@ schema {
 }
 
 type Query {
-    playLists: [PlayList!]!
+    playlists: [PlayList!]!,
+    tracks(inPlaylistId: Int, notInPlaylistId: Int): [Track!]!
 }
 
 type PlayList {

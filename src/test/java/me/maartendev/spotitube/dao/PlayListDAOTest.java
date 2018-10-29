@@ -114,7 +114,7 @@ public class PlayListDAOTest extends DatabaseTest {
         playListDAO.create(secondUser.getId(), playListForSecondUser);
 
 
-        List<PlayListDTO> playLists = playListDAO.allForUserId(firstUser.getId()).getPlaylists();
+        List<PlayListDTO> playLists = playListDAO.allTailoredToUserId(firstUser.getId()).getPlaylists();
 
         Assertions.assertEquals(2, playLists.size());
         Assertions.assertTrue(playLists.get(0).isOwner());

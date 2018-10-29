@@ -76,8 +76,15 @@ public class GraphQLFactory {
         DataLoaderFactory dataLoaderFactory = new DataLoaderFactory();
 
         DataFetcher<List<PlayListDTO>> playListsDataFetcher = dataFetcherFactory.getPlayListDataFetcher(playListDAO);
-        DataFetcher<PlayListDTO> createPlayListMutationDataFetcher = dataFetcherFactory.getCreatePlayListMutationDataFetcher(playListDAO);
-        DataFetcher<LoginResponseDTO> lLoginMutationDataFetcher = dataFetcherFactory.getLoginMutationDataFetcher(authService);
+        DataFetcher<List<TrackDTO>> tracksDataFetcher = dataFetcherFactory.getTracksDataFetcher(trackDAO);
+
+        // Mutations
+        DataFetcher<LoginResponseDTO> loginMutationDataFetcher = dataFetcherFactory.getLoginMutationDataFetcher(authService);
+        DataFetcher<List<PlayListDTO>> createPlayListMutationDataFetcher = dataFetcherFactory.getCreatePlayListMutationDataFetcher(playListDAO);
+        DataFetcher<List<PlayListDTO>> updatePlayListMutationDataFetcher = dataFetcherFactory.getUpdatePlayListMutationDataFetcher(playListDAO);
+        DataFetcher<List<PlayListDTO>> deletePlayListMutationDataFetcher = dataFetcherFactory.getDeletePlayListMutationDataFetcher(playListDAO);
+        DataFetcher<List<TrackDTO>> addTrackToPlayListMutationDataFetcher = dataFetcherFactory.getAddTrackToPlayListMutationDataFetcher(trackDAO);
+        DataFetcher<List<TrackDTO>> removeTrackFromPlayListMutationDataFetcher = dataFetcherFactory.getRemoveTrackFromPlayListMutationDataFetcher(trackDAO);
 
         DataLoader<Integer, TrackDTO> trackDataLoader = dataLoaderFactory.getTrackDataLoader(trackDAO);
         registry.register("trackDataLoader", trackDataLoader);
@@ -85,14 +92,19 @@ public class GraphQLFactory {
 
         RuntimeWiring runtimeWiring = newRuntimeWiring()
                 .type("Query", typeWiring -> typeWiring
-                        .dataFetcher("playLists", playListsDataFetcher)
+                        .dataFetcher("playlists", playListsDataFetcher)
+                        .dataFetcher("tracks", tracksDataFetcher)
                 )
                 .type("PlayList", typeWiring -> typeWiring
                         .dataFetcher("tracks", playlistTracksDataFetcher)
                 )
                 .type("Mutation", typeWiring -> typeWiring
-                        .dataFetcher("createPlayList", createPlayListMutationDataFetcher)
-                        .dataFetcher("login", lLoginMutationDataFetcher)
+                        .dataFetcher("login", loginMutationDataFetcher)
+                        .dataFetcher("createPlaylist", createPlayListMutationDataFetcher)
+                        .dataFetcher("deletePlaylist", deletePlayListMutationDataFetcher)
+                        .dataFetcher("updatePlaylist", updatePlayListMutationDataFetcher)
+                        .dataFetcher("addTrackToPlaylist", addTrackToPlayListMutationDataFetcher)
+                        .dataFetcher("removeTrackFromPlaylist", removeTrackFromPlayListMutationDataFetcher)
                 )
                 .build();
 

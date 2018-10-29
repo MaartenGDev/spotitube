@@ -44,7 +44,7 @@ public class PlayListController {
             return Response.serverError().build();
         }
 
-        return Response.ok(playListDAO.allForUserId(authenticatedUser.getId())).build();
+        return Response.ok(playListDAO.allTailoredToUserId(authenticatedUser.getId())).build();
     }
 
     @PUT
@@ -68,7 +68,7 @@ public class PlayListController {
             return Response.serverError().build();
         }
 
-        return Response.ok(playListDAO.allForUserId(authenticatedUser.getId())).build();
+        return Response.ok(playListDAO.allTailoredToUserId(authenticatedUser.getId())).build();
     }
 
     @DELETE
@@ -92,7 +92,7 @@ public class PlayListController {
             return Response.serverError().build();
         }
 
-        return Response.ok(playListDAO.allForUserId(authenticatedUser.getId())).build();
+        return Response.ok(playListDAO.allTailoredToUserId(authenticatedUser.getId())).build();
     }
 
 
@@ -103,6 +103,6 @@ public class PlayListController {
             return new PlayListCollectionDTO(new ArrayList<>());
         }
 
-        return playListDAO.allForUserId(authenticatedUser.getId());
+        return playListDAO.allTailoredToUserId(authenticatedUser.getId());
     }
 }

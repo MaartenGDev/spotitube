@@ -1,9 +1,13 @@
 type Mutation {
-    createPlayList(input: PlayListInput!): PlayList,
-    login(input: LoginInput!): LoginOutput
+    login(input: LoginInput!): LoginOutput,
+    createPlaylist(input: PlaylistInput!): [PlayList!]!,
+    updatePlaylist(id: Int!, input: PlaylistInput!): [PlayList!]!,
+    deletePlaylist(id: Int!): [PlayList!]!,
+    removeTrackFromPlaylist(playlistId: Int!, trackId: Int!): [Track!]!
+    addTrackToPlaylist(playlistId: Int!, trackId: Int!, offlineAvailable: Boolean!): [Track!]!
 }
 
-input PlayListInput {
+input PlaylistInput {
     name: String!
 }
 
